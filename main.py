@@ -70,9 +70,9 @@ def connection_loop(events):
 		addr = get_current_ip()
 		port = consts.SERVER_PORT
 
-		server = ThreadServer(addr, port)
+		server = ThreadServer("0.0.0.0", port)
 		client = Client()
-		client.connect(addr, port)
+		client.connect("localhost", port)
 
 		server.start()
 	else:

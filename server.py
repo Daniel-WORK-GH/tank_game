@@ -51,7 +51,7 @@ class Server:
 
         forceprint = False
         if consts.SERVER_OTHERS_DEBUG_MSGS:
-            forceprint = client_address[0] != self.addr
+            forceprint = client_address[0] != "127.0.0.1"
 
         self.printwt(f'[ REQUEST from {client_address} ]: {data}', forceprint)
 
