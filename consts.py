@@ -6,7 +6,7 @@ PLAYER_SPEED = 48
 
 BUFFER_SIZE = 1024
 
-SERVER_DEBUG_MSGS = False
+SERVER_DEBUG_MSGS = True
 SERVER_OTHERS_DEBUG_MSGS = True # For any incoming users on other devices
 SERVER_PORT = 20_001
 

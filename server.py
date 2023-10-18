@@ -66,7 +66,6 @@ class Server:
         try:
             data, client_address = self.sock.recvfrom(1024)
             self.handle_request(data, client_address)
-
         except OSError as err:
             self.printwt(err)
 
@@ -89,8 +88,7 @@ class ThreadServer:
 
         try:
             while True and self.isrunning: 
-                self.server.wait_for_client()
-                
+                self.server.wait_for_client()   
         except KeyboardInterrupt:
             self.server.shutdown_server()
 

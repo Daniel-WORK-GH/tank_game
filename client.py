@@ -1,12 +1,13 @@
 import socket
 import sys
 import consts
+from server import get_current_ip
 
 class Client:
     def __init__(self):           
         self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)  
         self.serverAddr: tuple[str, int]
-        self.socket.bind(("0.0.0.0", 0))
+        self.socket.bind(("", consts.SERVER_PORT + 1))
         self.socket.settimeout(1)
 
     def connect(self, addr:str, port:int):
