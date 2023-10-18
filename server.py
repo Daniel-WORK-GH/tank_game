@@ -48,12 +48,17 @@ class Server:
 
     def handle_request(self, data, client_address):
         data = data.decode('utf-8')
-        self.printwt(f'[ REQUEST from {client_address} ]: {data}', consts.SERVER_OTHERS_DEBUG_MSGS)
+
+        forceprint = False
+        if consts.SERVER_OTHERS_DEBUG_MSGS:
+            forceprint = client_address[0] != self.addr
+
+        self.printwt(f'[ REQUEST from {client_address} ]: {data}', forceprint)
 
         self.update_on_request(data)
 
         resp = converter.player_list_to_json(self.players.values())
-        self.printwt(f'[ RESPONSE to {client_address} ]', consts.SERVER_OTHERS_DEBUG_MSGS)
+        self.printwt(f'[ RESPONSE to {client_address} ]', forceprint)
         self.sock.sendto(resp.encode('utf-8'), client_address)
 
 
