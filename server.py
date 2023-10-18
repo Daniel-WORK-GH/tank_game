@@ -6,8 +6,12 @@ from datetime import datetime
 from player import Player
 
 
+def get_current_hostname() -> str:
+    return socket.gethostname()
+
+
 def get_current_ip() -> str:
-    hostname = socket.gethostname()
+    hostname = get_current_hostname()
     ip_address = socket.gethostbyname(hostname)
     return ip_address
 
@@ -44,12 +48,12 @@ class Server:
 
     def handle_request(self, data, client_address):
         data = data.decode('utf-8')
-        self.printwt(f'[ REQUEST from {client_address} ]: {data}')
+        self.printwt(f'[ REQUEST from {client_address} ]: {data}', consts.SERVER_OTHERS_DEBUG_MSGS)
 
         self.update_on_request(data)
 
         resp = converter.player_list_to_json(self.players.values())
-        self.printwt(f'[ RESPONSE to {client_address} ]')
+        self.printwt(f'[ RESPONSE to {client_address} ]', consts.SERVER_OTHERS_DEBUG_MSGS)
         self.sock.sendto(resp.encode('utf-8'), client_address)
 
 

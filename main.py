@@ -4,7 +4,7 @@ import entityhandler
 import converter
 from player import Player
 from consts import colors
-from server import ThreadServer, get_current_ip
+from server import ThreadServer, get_current_ip, get_current_hostname
 from client import Client
 
 

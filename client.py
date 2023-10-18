@@ -12,7 +12,13 @@ class Client:
 
 
     def send(self, data):
-        self.socket.sendto(str.encode(data, 'utf-8'), self.serverAddr)
+        self.socket.settimeout(0.01)
+        
+        try:
+            self.socket.sendto(str.encode(data, 'utf-8'), self.serverAddr)
+        except socket.timeout as e:
+            print(e)
+
 
 
     def recv(self) -> str:
