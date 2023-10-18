@@ -1,6 +1,7 @@
 import pygame
 import consts
 import entityhandler
+import converter
 from player import Player
 from consts import colors
 from server import ThreadServer, get_current_ip
@@ -60,7 +61,10 @@ def game_loop():
 def connection_loop(events):
 	global ishosting, server, client, gamestate
 
-	ishosting = input("Hosting ? (y/n):") == 'y'
+	name = input("Enter name: ")
+	ishosting = input("Hosting ? (y/n): ") == 'y'
+
+	entityhandler.thisPlayer.name = name
 
 	if ishosting:
 		addr = get_current_ip()
@@ -72,7 +76,7 @@ def connection_loop(events):
 
 		server.start()
 	else:
-		addr = input("Enter server ip:")
+		addr = input("Enter server ip: ")
 		port = consts.SERVER_PORT
 
 		client = Client()
@@ -87,6 +91,14 @@ def in_game_loop(events):
 
 	# Draw players
 	entityhandler.draw(screen)
+
+	# Send and get data from server
+	player = entityhandler.thisPlayer
+	playerjson = converter.player_to_json(player)
+	client.send(playerjson)
+	allplayers = client.recv()
+
+	entityhandler.update_players(allplayers)
 
 
 game_loop()

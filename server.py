@@ -1,6 +1,7 @@
 import socket
 import threading
 import converter
+import consts
 from datetime import datetime
 from player import Player
 
@@ -16,21 +17,22 @@ class Server:
         self.addr = addr
         self.port = port
 
-        self.printwt('Creating socket...')
-        self.printwt('Socket created')
+        self.printwt('Creating socket...', True)
+        self.printwt('Socket created', True)
         # bind server to the address
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         
-        self.printwt(f'Binding server to {self.addr}:{self.port}...')
-        self.printwt(f'Server binded to {self.addr}:{self.port}')
+        self.printwt(f'Binding server to {self.addr}:{self.port}...', True)
+        self.printwt(f'Server binded to {self.addr}:{self.port}', True)
         self.sock.bind((addr, port))
 
         self.players:dict[str, Player] = {}
 
 
-    def printwt(self, msg):
-        current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print(f'[{current_date_time}] {msg}')
+    def printwt(self, msg, forceprint = False):
+        if consts.SERVER_DEBUG_MSGS or forceprint:
+            current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            print(f'[{current_date_time}] {msg}')
 
 
     def update_on_request(self, data):
@@ -42,8 +44,7 @@ class Server:
 
     def handle_request(self, data, client_address):
         data = data.decode('utf-8')
-        self.printwt(f'[ REQUEST from {client_address} ]')
-        print('\n', data, '\n')
+        self.printwt(f'[ REQUEST from {client_address} ]: {data}')
 
         self.update_on_request(data)
 
