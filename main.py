@@ -98,7 +98,8 @@ def in_game_loop(events):
 	client.send(playerjson)
 	allplayers = client.recv()
 
-	entityhandler.update_players(allplayers)
+	if allplayers != None:
+		entityhandler.update_players(allplayers)
 
 
 game_loop()
