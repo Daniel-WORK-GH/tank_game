@@ -1,8 +1,7 @@
-import converter
 import json
 from player import Player
-from client import Client
-
+from network.client import Client
+from network import converter
 
 entities = []
 idableEntities:dict[str, Player] = {}
