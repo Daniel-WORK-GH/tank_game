@@ -5,8 +5,11 @@ from player import Player
 def player_to_json(player:Player) -> str:
     x, y = player.position
     _, _, w, h = player.bounds
-    angle = player.angle
-    return json.dumps({"name":player.name, "position":(x, y), "size":(w, h), "angle":angle})
+    hw, hh = player.headsize
+    angle = player.bodyangle
+    headangle = player.headangle
+    return json.dumps({"name":player.name, "position":(x, y),
+                "size":(w, h), "headsize":(hw, hh), "angle":angle, "headangle":headangle})
 
 
 def set_player_data(player:Player, playerJsonData:str):
@@ -14,9 +17,11 @@ def set_player_data(player:Player, playerJsonData:str):
     name = dic['name']
     position = dic['position']
     size = dic['size']
+    headsize = dic['headsize']
     angle = dic['angle']
-
-    player.set_data(name, position[0], position[1], size[0], size[1], angle)
+    headangle = dic['headangle']
+    
+    player.set_data(name, position[0], position[1], size[0], size[1], headsize[0], headsize[1], angle, headangle)
 
 
 def json_to_player(jsonData:str) -> Player:
@@ -24,7 +29,6 @@ def json_to_player(jsonData:str) -> Player:
     set_player_data(player, jsonData)
     return player
     
-
 
 def player_list_to_json(players:list[Player]) -> str:
     jsonlist = []
