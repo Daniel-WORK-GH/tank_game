@@ -1,7 +1,7 @@
 import socket
 import sys
 import consts
-from server import get_current_ip
+from network.server import get_current_ip
 
 class Client:
     def __init__(self):           
