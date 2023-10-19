@@ -3,7 +3,7 @@ import threading
 import consts
 from datetime import datetime
 from player import Player
-from network import converter
+from . import converter
 
 
 def get_current_hostname() -> str:

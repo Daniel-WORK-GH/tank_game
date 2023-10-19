@@ -6,6 +6,7 @@ from consts import colors
 from network.server import ThreadServer, get_current_ip, get_current_hostname
 from network.client import Client
 from network import converter
+from mapobjects.map import Map
 
 class GameState:
 	connecting = 1
@@ -26,6 +27,11 @@ pygame.init()
 ishosting = False
 server:ThreadServer = None
 client:Client = None
+
+
+# Ingame objects
+map = Map()
+map.load("maps/map1.txt")
 
 
 def game_loop():
@@ -88,8 +94,9 @@ def in_game_loop(events):
 	# Update players
 	entityhandler.update(clock, events)
 
-	# Draw players
+	# Draw players and map
 	entityhandler.draw(screen)
+	map.draw(screen)
 
 	# Send and get data from server
 	player = entityhandler.thisPlayer
