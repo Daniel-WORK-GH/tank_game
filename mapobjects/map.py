@@ -9,6 +9,7 @@ class Map:
         self.tilewidth = tilewidth
         self.tileheight = tileheight
 
+
     def load(self, mapname):      
         with open(mapname) as file:
             x, y = 0, 0
@@ -29,6 +30,7 @@ class Map:
 
                 self.map.append(row)
                 y, x = y + 1, 0
+
 
     def draw(self, surface):
         for row in self.map:
