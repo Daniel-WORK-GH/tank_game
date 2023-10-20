@@ -7,6 +7,7 @@ from network.server import ThreadServer, get_current_ip, get_current_hostname
 from network.client import Client
 from network import converter
 from mapobjects.map import Map
+from mapobjects.shadow import Shadow
 
 class GameState:
 	connecting = 1
@@ -32,6 +33,7 @@ client:Client = None
 # Ingame objects
 map = Map()
 map.load("maps/map1.txt")
+shadow = Shadow(screen, map.map)
 
 
 def game_loop():
@@ -75,7 +77,7 @@ def connection_loop(events):
 		addr = get_current_ip()
 		port = consts.SERVER_PORT
 
-		server = ThreadServer("0.0.0.0", port)
+		server = ThreadServer("", port)
 		client = Client()
 		client.connect("localhost", port)
 
@@ -106,6 +108,10 @@ def in_game_loop(events):
 
 	if allplayers != None:
 		entityhandler.update_players(allplayers)
+
+	# Draw vision
+	shadow.draw(screen, entityhandler.thisPlayer.position)
+	
 
 
 game_loop()

@@ -47,13 +47,13 @@ class Tile:
             draw.rect(surface, self.color, self.bounds)
 
 
-tiles = {
+tile_ids = {
     Tile.nothing_id : Tile(Tile.nothing_id),
     Tile.wall_id : Tile(Tile.wall_id, color=consts.colors.black)
 }
 
 
 def create_tile(id, x, y, width, height):
-    tile = tiles[id].clone()
+    tile = tile_ids[id].clone()
     tile.set_data(x, y, width, height)
     return tile

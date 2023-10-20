@@ -7,7 +7,7 @@ class Client:
     def __init__(self):           
         self.socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)  
         self.serverAddr: tuple[str, int]
-        self.socket.bind(("0.0.0.0", consts.CLIENT_PORT))
+        # self.socket.bind(("0.0.0.0", consts.CLIENT_PORT))
         self.socket.settimeout(1)
 
 

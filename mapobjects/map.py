@@ -5,7 +5,7 @@ class Map:
     def __init__(self,
             tilewidth=consts.DEFAULT_TILE_SIZE,
             tileheight=consts.DEFAULT_TILE_SIZE):
-        self.map:list[list[Tile]] = []
+        self.map:list[Tile] = []
         self.tilewidth = tilewidth
         self.tileheight = tileheight
 
@@ -17,24 +17,20 @@ class Map:
             for line in file.readlines():
                 idstr = line.split(',')
 
-                row = []
                 for i in idstr:
                     id = int(i)
 
                     tile = create_tile(id,
                         x * self.tilewidth, y * self.tileheight,
                         self.tilewidth, self.tileheight)
+                    self.map.append(tile)
                     
-                    row.append(tile)
                     x = x + 1
-
-                self.map.append(row)
                 y, x = y + 1, 0
 
 
     def draw(self, surface):
-        for row in self.map:
-            for tile in row:
-                tile.draw(surface)
+        for tile in self.map:
+            tile.draw(surface)
 
     

@@ -15,7 +15,9 @@ BUFFER_SIZE = 1024
 SERVER_DEBUG_MSGS = False
 SERVER_OTHERS_DEBUG_MSGS = True # For any incoming users on other devices
 SERVER_PORT = 20_001
-CLIENT_PORT = 20_002
+CLIENT_PORT = 20_001
+
+DEBUG_MAP = True
 
 class colors:
     white = (255, 255, 255)
@@ -23,3 +25,5 @@ class colors:
     green = (0, 255, 0)
     blue = (0, 0, 255)
     black = (0, 0, 0)
+
+    smitranparent_gray = (100, 100, 100, 10)
