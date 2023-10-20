@@ -106,8 +106,11 @@ class Shadow:
 
     def draw(self, surface:Surface, center:Vector2):
         shadow = self.create_shadow(center)
-        draw.polygon(surface, consts.colors.smitranparent_gray,
+        draw.polygon(self.surface, consts.colors.smitranparent_gray,
             [(round(p[0]), round(p[1])) for p in shadow])
+        
+        shadowmask = mask.from_surface(shadow)
+        surface.blit(shadowmask)
 
         if consts.DEBUG_MAP:
             for line in self.project_vectors(center):
