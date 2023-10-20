@@ -9,7 +9,7 @@ PLAYER_SPEED = 48
 HEAD_ROTATION = 60
 BODY_ROTATION = 50
 
-DEFAULT_TILE_SIZE = 48
+DEFAULT_TILE_SIZE = 24
 
 BUFFER_SIZE = 1024
 SERVER_DEBUG_MSGS = False
@@ -17,7 +17,7 @@ SERVER_OTHERS_DEBUG_MSGS = True # For any incoming users on other devices
 SERVER_PORT = 20_001
 CLIENT_PORT = 20_001
 
-DEBUG_MAP = True
+DEBUG_MAP = False
 
 class colors:
     white = (255, 255, 255)

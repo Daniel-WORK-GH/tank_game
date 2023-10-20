@@ -96,6 +96,9 @@ def in_game_loop(events):
 	# Update players
 	entityhandler.update(clock, events)
 
+	# Draw vision
+	shadow.draw(screen, entityhandler.thisPlayer.position)
+
 	# Draw players and map
 	entityhandler.draw(screen)
 	map.draw(screen)
@@ -108,10 +111,6 @@ def in_game_loop(events):
 
 	if allplayers != None:
 		entityhandler.update_players(allplayers)
-
-	# Draw vision
-	shadow.draw(screen, entityhandler.thisPlayer.position)
-	
 
 
 game_loop()
