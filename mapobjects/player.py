@@ -5,7 +5,7 @@ from consts import colors
 from mapobjects import transform
 
 class Player:
-    def __init__(self, name = "", x=0, y=0,
+    def __init__(self, name = "", x=1, y=1,
             width=consts.DEFAULT_BODY_WIDTH,
             height=consts.DEFAULT_BODY_HEIGHT,
             headwidth=consts.DEFAULT_HEAD_WIDTH,
