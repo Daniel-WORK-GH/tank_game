@@ -100,7 +100,7 @@ class Player:
         headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
         cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
-        draw.polygon(surface, colors.red, bodypoints)
-        draw.polygon(surface, colors.black, headpoints)
-        draw.polygon(surface, colors.black, cannonpoints)
+        draw.polygon(surface, colors.tank_body, bodypoints)
+        draw.polygon(surface, colors.tank_head, headpoints)
+        draw.polygon(surface, colors.tank_head, cannonpoints)
 

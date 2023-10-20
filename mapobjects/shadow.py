@@ -107,13 +107,17 @@ class Shadow:
     def draw(self, surface:Surface, center:Vector2):
         shadow = self.create_shadow(center)
 
-        self.surface.fill(consts.colors.smitranparent_gray)
-        draw.polygon(self.surface, consts.colors.black,
+        self.surface.fill(consts.colors.transparent_dark_gray)
+        draw.polygon(self.surface, consts.colors.black_rgba,
             [(round(p[0]), round(p[1])) for p in shadow])
         #shadowmask = mask.from_threshold(self.surface, consts.colors.white, (1, 1, 1))
 
         if not consts.DEBUG_MAP:    
-            surface.blit(self.surface, (0, 0), None, BLEND_RGB_SUB)
+            sur = Surface(surface.get_size(), SRCALPHA)
+            sur.fill((255, 255, 255, 255))
+            sur.blit(self.surface, (0, 0), None, BLEND_RGBA_SUB)
+            #surface.fill(consts.colors.white)
+            surface.blit(sur, (0, 0))
             #draw.polygon(surface, consts.colors.smitranparent_gray, shadowmask.outline())
 
 

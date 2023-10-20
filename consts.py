@@ -26,4 +26,10 @@ class colors:
     blue = (0, 0, 255)
     black = (0, 0, 0)
 
-    smitranparent_gray = (100, 100, 100, 10)
+    tank_body = (84, 92, 96)
+    tank_head = (171, 163, 159)
+
+    grass = (86, 125, 70)
+
+    transparent_dark_gray = (100, 100, 100, 0)
+    black_rgba = (0, 0, 0, 255)

@@ -17,7 +17,7 @@ gamestate = GameState.connecting
 
 
 # Setup game window
-screen = pygame.display.set_mode((600, 400))
+screen = pygame.display.set_mode((600, 400), pygame.SRCALPHA)
 clock = pygame.time.Clock()
 pygame.display.set_caption(consts.PROGRAM_NAME)
 pygame.init()
@@ -42,7 +42,7 @@ def game_loop():
 	while running:
 		# Handle game step
 		clock.tick(consts.FPS_CAP)
-		screen.fill(colors.white)
+		screen.fill(colors.grass)
 
 		# Get all events since last step
 		events = pygame.event.get()
@@ -96,11 +96,13 @@ def in_game_loop(events):
 	# Update players
 	entityhandler.update(clock, events)
 
+	# Draw players
+	entityhandler.draw(screen)
+
 	# Draw vision
 	shadow.draw(screen, entityhandler.thisPlayer.position)
 
-	# Draw players and map
-	entityhandler.draw(screen)
+	# Draw map
 	map.draw(screen)
 
 	# Send and get data from server
