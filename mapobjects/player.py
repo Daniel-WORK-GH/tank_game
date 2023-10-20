@@ -2,6 +2,7 @@ from pygame import *
 import consts
 import math
 from consts import colors
+from mapobjects import transform
 
 class Player:
     def __init__(self, name = "", x=0, y=0,
@@ -20,11 +21,8 @@ class Player:
         self.bodyangle = angle
         self.headangle = headangle
 
-        self.bodysurface = surface.Surface((width, height), SRCALPHA, 32)
-        self.headsurface = surface.Surface((width, height), SRCALPHA, 32)
-
         self.bodypoints = [ 
-            (0,0),
+            (0, 0),
             (0, height),
             (width, height),
             (width, 0),
@@ -35,6 +33,15 @@ class Player:
             (headwidth, headheight),
             (headwidth, 0),
         ]
+        self.cannonpoints = [
+            (0, -headheight / 6),
+            (width / 2, -headheight / 6),
+            (width / 2, headheight / 6),
+            (0, headheight / 6),
+        ]
+
+        self.bodypoints = transform.centerPolygon(self.bodypoints)
+        self.headpoints = transform.centerPolygon(self.headpoints)
 
 
     def set_data(self, name, x, y, width, height, headwidth, headheight, angle, headangle):
@@ -64,14 +71,18 @@ class Player:
 
         # Check for user keyboard movement input
         speed = 0
+        bodyangle = 0
         if keys[K_w]: speed = speed - 1
-        if keys[K_a]: self.bodyangle += consts.HEAD_ROTATION * (clock.get_time() / 1000)
-        if keys[K_d]: self.bodyangle -= consts.HEAD_ROTATION * (clock.get_time() / 1000)
+        if keys[K_a]: bodyangle += consts.BODY_ROTATION * (clock.get_time() / 1000)
+        if keys[K_d]: bodyangle -= consts.BODY_ROTATION * (clock.get_time() / 1000)
         if keys[K_s]: speed = speed + 1
+        self.bodyangle += bodyangle
 
         # Check for head movement
-        if keys[K_LEFT]: self.headangle += consts.BODY_ROTATION * (clock.get_time() / 1000)
-        if keys[K_RIGHT]: self.headangle -= consts.BODY_ROTATION * (clock.get_time() / 1000)
+        headangle = 0
+        if keys[K_LEFT]: headangle += consts.HEAD_ROTATION * (clock.get_time() / 1000)
+        if keys[K_RIGHT]: headangle -= consts.HEAD_ROTATION * (clock.get_time() / 1000)
+        self.headangle += headangle + bodyangle
 
         # Move player given set velocity
         direction = Vector2(-math.cos(math.radians(self.bodyangle)), math.sin(math.radians(self.bodyangle)))
@@ -85,29 +96,11 @@ class Player:
 
 
     def draw(self, surface:Surface):
-        self.bodysurface = self.bodysurface.convert_alpha()
-        draw.rect(self.bodysurface, colors.red, Rect(0, 0, self.bounds.w, self.bounds.h))
-        rotatedbody = transform.rotate(self.bodysurface, self.bodyangle)
+        bodypoints = transform.transformPolygon(self.bodypoints, self.position, self.bodyangle)  
+        headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
+        cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
-        rotatedbodyhalf = (rotatedbody.get_width() / 2, rotatedbody.get_height() / 2)
-        bodyhalf = (self.bodysurface.get_width() / 2, self.bodysurface.get_height() / 2)
-        headhalf = (self.headsize.x / 2, self.headsize.y / 2)
-
-        self.headsurface = self.headsurface.convert_alpha()
-        draw.rect(self.headsurface, colors.black, Rect(
-            bodyhalf[0] - headhalf[0],
-            bodyhalf[1] - headhalf[1],
-            self.headsize.x, self.headsize.y))
-        
-        cannonsize = (bodyhalf[0], headhalf[1] / 2)  
-        draw.rect(self.headsurface, colors.black, Rect(
-            bodyhalf[0],
-            bodyhalf[1] - cannonsize[1] / 2,
-            cannonsize[0], cannonsize[1]))
-        rotatedhead = transform.rotate(self.headsurface, self.headangle + self.bodyangle)
-
-        rotatedheadhalf = (rotatedhead.get_width() / 2, rotatedhead.get_height() / 2)
-
-        surface.blit(rotatedbody, self.position - rotatedbodyhalf)
-        surface.blit(rotatedhead, self.position - rotatedheadhalf)
+        draw.polygon(surface, colors.red, bodypoints)
+        draw.polygon(surface, colors.black, headpoints)
+        draw.polygon(surface, colors.black, cannonpoints)
 
