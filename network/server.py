@@ -2,7 +2,7 @@ import socket
 import threading
 import consts
 from datetime import datetime
-from player import Player
+from mapobjects.player import Player
 from . import converter
 
 

@@ -1,7 +1,7 @@
 import pygame
 import consts
 import entityhandler
-from player import Player
+from mapobjects.player import Player
 from consts import colors
 from network.server import ThreadServer, get_current_ip, get_current_hostname
 from network.client import Client

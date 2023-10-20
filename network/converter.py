@@ -1,5 +1,5 @@
 import json
-from player import Player
+from mapobjects.player import Player
 
 
 def player_to_json(player:Player) -> str:

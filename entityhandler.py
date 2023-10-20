@@ -1,5 +1,5 @@
 import json
-from player import Player
+from mapobjects.player import Player
 from network.client import Client
 from network import converter
 
