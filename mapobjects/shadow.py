@@ -107,12 +107,15 @@ class Shadow:
     def draw(self, surface:Surface, center:Vector2):
         shadow = self.create_shadow(center)
 
-        self.surface.fill(consts.colors.white)
+        self.surface.fill(consts.colors.smitranparent_gray)
         draw.polygon(self.surface, consts.colors.black,
             [(round(p[0]), round(p[1])) for p in shadow])
+        #shadowmask = mask.from_threshold(self.surface, consts.colors.white, (1, 1, 1))
 
         if not consts.DEBUG_MAP:    
             surface.blit(self.surface, (0, 0), None, BLEND_RGB_SUB)
+            #draw.polygon(surface, consts.colors.smitranparent_gray, shadowmask.outline())
+
 
         if consts.DEBUG_MAP:
             #draw.polygon(surface, consts.colors.smitranparent_gray,
@@ -122,6 +125,7 @@ class Shadow:
             #    draw.circle(surface, consts.colors.red, s, 4)
             
             #surface.blit(self.surface, (0, 0))
+            #surface.blit(shadowmask.to_surface(), (0, 0))
 
             for line in self.project_vectors(center):
                 draw.line(surface, consts.colors.blue, *line)
