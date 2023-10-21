@@ -1,8 +1,10 @@
 from pygame import *
 import consts
 import math
+import linehelper
 from consts import colors
 from mapobjects import transform
+
 
 class Player:
     def __init__(self, name = "", x=1, y=1,
@@ -12,9 +14,13 @@ class Player:
             headheight=consts.DEFAULT_HEAD_HEIGHT,
             angle=0.0, headangle=0.0):
         self.name = name
+        self.health = 100
         self.position = Vector2(x, y)
         self.bounds = Rect(round(x), round(y), width, height)
         self.velocity = Vector2(0, 0)
+
+        self.elapsedcooldown = 0
+        self.shot = None
 
         self.headsize = Vector2(headwidth, headheight)
 
@@ -59,6 +65,18 @@ class Player:
         self.bounds.y = round(y)
 
 
+    def get_current_edges(self):
+        bodypoints = transform.transformPolygon(self.bodypoints, self.position, self.bodyangle) 
+        yield (bodypoints[0], bodypoints[1])
+        yield (bodypoints[1], bodypoints[2])
+        yield (bodypoints[2], bodypoints[3])
+        yield (bodypoints[3], bodypoints[0])
+
+    
+    def apply_damage(self):
+        self.health = 0
+
+
     def set_size(self, width, height, headwidth, headheight):
         self.bounds.width = width
         self.bounds.height = height
@@ -94,6 +112,14 @@ class Player:
         self.bounds.x = round(self.position.x)
         self.bounds.y = round(self.position.y)
 
+        # Handle shooting
+        self.shot = None
+        self.elapsedcooldown += (clock.get_time() / 1000)
+        if self.elapsedcooldown > consts.PLAYER_COOLDOWN:
+            if keys[K_SPACE]:
+                lookdir = Vector2(-math.cos(math.radians(self.headangle)), math.sin(math.radians(self.headangle)))
+                self.shot = Rocket(self.name, self.position, lookdir)
+
 
     def draw(self, surface:Surface):
         bodypoints = transform.transformPolygon(self.bodypoints, self.position, self.bodyangle)  
@@ -104,3 +130,27 @@ class Player:
         draw.polygon(surface, colors.tank_head, headpoints)
         draw.polygon(surface, colors.tank_head, cannonpoints)
 
+
+class Rocket:
+    def __init__(self, sourceplayer:str, start:Vector2, direction:Vector2):
+        self.player = sourceplayer
+        self.start = start
+        self.direction = direction
+        self.checkedcollide = False
+
+
+    def check_collide(self, playerlist:list[Player]):
+        if self.checkedcollide: return
+        self.checkedcollide = True
+
+        self.direction = linehelper.extend_point(self.start, self.direction, 10_000)
+
+        for player in playerlist:
+            for edge in player.get_current_edges():
+                if linehelper.line_line_intersect(*edge, *self.direction):
+                    player.apply_damage()
+                    break
+
+
+    def draw(self, surface:Surface):
+        draw.line(surface, color.rocket, *self.start, self.direction)

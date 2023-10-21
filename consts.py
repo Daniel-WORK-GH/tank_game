@@ -8,6 +8,8 @@ DEFAULT_HEAD_HEIGHT = 20
 PLAYER_SPEED = 48
 HEAD_ROTATION = 60
 BODY_ROTATION = 50
+PLAYER_COOLDOWN = 4 # sec
+
 
 DEFAULT_TILE_SIZE = 24
 
@@ -16,6 +18,8 @@ SERVER_DEBUG_MSGS = False
 SERVER_OTHERS_DEBUG_MSGS = True # For any incoming users on other devices
 SERVER_PORT = 20_001
 CLIENT_PORT = 20_001
+
+ROCKET_LIFE_TIME = 0.3 # sec
 
 DEBUG_MAP = False
 
@@ -28,6 +32,8 @@ class colors:
 
     tank_body = (84, 92, 96)
     tank_head = (171, 163, 159)
+
+    rocket = (255,206,0)
 
     grass = (86, 125, 70)
 
