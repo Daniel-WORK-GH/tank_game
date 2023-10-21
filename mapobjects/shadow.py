@@ -104,7 +104,6 @@ class Shadow:
             surface.blit(sur, (0, 0))
             #draw.polygon(surface, consts.colors.smitranparent_gray, shadowmask.outline())
 
-
         if consts.DEBUG_MAP:
             #draw.polygon(surface, consts.colors.smitranparent_gray,
             #    [(round(p[0]), round(p[1])) for p in shadow])
