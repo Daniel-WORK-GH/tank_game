@@ -108,6 +108,7 @@ def in_game_loop(events):
 	# Send and get data from server
 	player = entityhandler.thisPlayer
 	playerjson = converter.player_to_json(player)
+
 	client.send(playerjson)
 	allplayers = client.recv()
 

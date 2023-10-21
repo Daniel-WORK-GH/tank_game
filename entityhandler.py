@@ -2,21 +2,11 @@ import json
 from mapobjects.player import Player
 from network.client import Client
 from network import converter
-
-entities = []
+   
 idableEntities:dict[str, Player] = {}
 thisPlayer = Player("tempname")
 
 idableEntities[thisPlayer.name] = thisPlayer
-
-
-def remove_entity(entity):
-    if entity in entities:
-        entities.remove(entity)
-
-    for key, val in idableEntities.items():
-        if val == entity:
-            idableEntities.pop(key)
 
 
 def update_players(playerJsonList:str):

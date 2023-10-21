@@ -98,7 +98,7 @@ class Shadow:
 
         if not consts.DEBUG_MAP:    
             sur = Surface(surface.get_size(), SRCALPHA)
-            sur.fill((255, 255, 255, 255))
+            sur.fill((*consts.colors.grass, 255))
             sur.blit(self.surface, (0, 0), None, BLEND_RGBA_SUB)
             #surface.fill(consts.colors.white)
             surface.blit(sur, (0, 0))
