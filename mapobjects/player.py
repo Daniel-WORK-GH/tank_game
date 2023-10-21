@@ -126,6 +126,13 @@ class Player:
         headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
         cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
+
+        lookdir = Vector2(-math.cos(math.radians(self.headangle)), math.sin(math.radians(self.headangle)))
+        rocket = Rocket('hello?', self.position, lookdir)
+
+        rocket.draw(surface)
+
+
         draw.polygon(surface, colors.tank_body, bodypoints)
         draw.polygon(surface, colors.tank_head, headpoints)
         draw.polygon(surface, colors.tank_head, cannonpoints)
@@ -153,4 +160,4 @@ class Rocket:
 
 
     def draw(self, surface:Surface):
-        draw.line(surface, color.rocket, *self.start, self.direction)
+        draw.line(surface, color.rocket, *self.start, *self.direction)
