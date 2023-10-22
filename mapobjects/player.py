@@ -12,14 +12,14 @@ class Player:
             height=consts.DEFAULT_BODY_HEIGHT,
             headwidth=consts.DEFAULT_HEAD_WIDTH,
             headheight=consts.DEFAULT_HEAD_HEIGHT,
-            angle=0.0, headangle=0.0):
+            angle=0.0, headangle=0.0, elapsedcooldown=0):
         self.name = name
         self.health = 100
         self.position = Vector2(x, y)
         self.bounds = Rect(round(x), round(y), width, height)
         self.velocity = Vector2(0, 0)
 
-        self.elapsedcooldown = 0
+        self.elapsedcooldown = elapsedcooldown
         self.shot = None
 
         self.headsize = Vector2(headwidth, headheight)
@@ -50,13 +50,14 @@ class Player:
         self.headpoints = transform.centerPolygon(self.headpoints)
 
 
-    def set_data(self, name, x, y, width, height, headwidth, headheight, angle, headangle, shot):
+    def set_data(self, name, x, y, width, height, headwidth, headheight, angle, headangle, shot, elapsedcooldown):
         self.name = name
         self.set_location(x, y)
         self.set_size(width, height, headwidth, headheight)
         self.bodyangle = angle
         self.headangle = headangle
         self.shot = shot
+        self.elapsedcooldown = elapsedcooldown
 
 
     def set_location(self, x, y):
@@ -114,12 +115,12 @@ class Player:
         self.bounds.y = round(self.position.y)
 
         # Handle shooting
-        #sself.shot = None
+        self.shot = None
         self.elapsedcooldown += (clock.get_time() / 1000)
         if self.elapsedcooldown > consts.PLAYER_COOLDOWN:
             if keys[K_SPACE]:
                 lookdir = Vector2(math.cos(math.radians(self.headangle)), -math.sin(math.radians(self.headangle)))
-                self.shot = Rocket(self.position, lookdir)
+                self.shot = Rocket(self.name, self.position, lookdir)
                 self.elapsedcooldown = 0
 
 
@@ -139,8 +140,8 @@ class Player:
 
 
 class Rocket:
-    def __init__(self, start:Vector2, direction:Vector2):
-        #self.player = sourceplayer
+    def __init__(self,sourceplayer:str, start:Vector2, direction:Vector2):
+        self.player = sourceplayer
         self.start = start
         self.direction = direction
         self.checkedcollide = False

@@ -1,6 +1,6 @@
 import json
 import copy
-from mapobjects.player import Player
+from mapobjects.player import Player, Rocket
 
 
 def player_to_json(player:Player) -> str:
@@ -9,7 +9,15 @@ def player_to_json(player:Player) -> str:
     hw, hh = player.headsize
     angle = player.bodyangle
     headangle = player.headangle
-    playershot = copy.copy(player.shot)
+    playershot = player.shot
+    elptime = player.elapsedcooldown   
+
+    shotdict = None
+    if playershot:
+        shotsource = playershot.player
+        start = (playershot.start[0], playershot.start[1])
+        direction =(playershot.direction[0], playershot.direction[1])
+        shotdict = {'player':shotsource, 'start':start, 'direction':direction}
 
     ret = {
         "name":player.name,
@@ -17,16 +25,10 @@ def player_to_json(player:Player) -> str:
         "size":(w, h),
         "headsize":(hw, hh),
         "angle":angle,
-        "headangle":headangle
+        "headangle":headangle,
+        "elapsedtime":elptime,
+        "shot":shotdict
     }
-       
-    if playershot:
-        print(playershot)
-        # shotsource = playershot.player
-        start = tuple(playershot.start)
-        direction = tuple(playershot.direction)
-        ret.update({'shot':{'start':start, 'direction':direction}})
-    else: ret.update({"shot":None})
 
     return json.dumps(ret)
 
@@ -39,12 +41,15 @@ def set_player_data(player:Player, playerJsonData:str):
     headsize = dic['headsize']
     angle = dic['angle']
     headangle = dic['headangle']
+    elptime = dic['elapsedtime']
     shot = dic['shot']
 
-    if shot:
-        print('boom!')            
+    rocket = None
 
-    player.set_data(name, position[0], position[1], size[0], size[1], headsize[0], headsize[1], angle, headangle, shot)
+    if shot:
+        rocket = Rocket(shot['player'], shot['start'], shot['direction'])            
+
+    player.set_data(name, position[0], position[1], size[0], size[1], headsize[0], headsize[1], angle, headangle, rocket, elptime)
 
 
 def json_to_player(jsonData:str) -> Player:
