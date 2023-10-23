@@ -33,7 +33,7 @@ client:Client = None
 # Ingame objects
 map = Map()
 map.load("maps/map1.txt")
-shadow = Shadow(screen, map.map)
+shadow = Shadow(screen, map)
 
 
 def game_loop():
@@ -43,6 +43,7 @@ def game_loop():
 		# Handle game step
 		clock.tick(consts.FPS_CAP)
 		screen.fill(colors.grass)
+		print(clock.get_fps())
 
 		# Get all events since last step
 		events = pygame.event.get()

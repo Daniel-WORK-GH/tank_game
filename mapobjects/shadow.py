@@ -3,9 +3,10 @@ import math as Math
 import linehelper
 from pygame import *
 from mapobjects.tile import Tile
+from mapobjects.map import Map
 
 class Shadow:
-    def __init__(self, surface:Surface, tiles:list[Tile]):
+    def __init__(self, surface:Surface, tiles:Map):
         self.tiles = tiles
         self.surface = Surface(surface.get_size(), SRCALPHA)
         self.mappoints = self.create_map_points()
@@ -26,17 +27,20 @@ class Shadow:
 
 
     def enumarate_tile_row(self, start:tuple[float, float], end:tuple[float, float]):
+        STEP = 1.4
+        
         dx, dy = linehelper.normalize_line(start, end)
 
-        #x, y = round(start[0]), round(start[1])
+        x, y = round(start[0]), round(start[1])
 
-        #while True
+        while True:
+            tilex, tiley = x, y
 
-        
-        
-        
+            self
 
+            x, y = x + STEP * dx, y + STEP * dy
 
+    
     def create_map_points(self) -> list[Vector2]:
         points:list[Vector2] = []
         count:list[int] = []
