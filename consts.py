@@ -1,4 +1,7 @@
+import pygame
+
 PROGRAM_NAME = "Game"
+FONT = pygame.font.SysFont('timesnewroman',  36)
 FPS_CAP = 60
 
 DEFAULT_BODY_WIDTH = 48
@@ -22,6 +25,8 @@ CLIENT_PORT = 20_001
 ROCKET_LIFE_TIME = 0.3 # sec
 
 DEBUG_MAP = False
+
+DEBUG_MENU = True
 
 class colors:
     white = (255, 255, 255)

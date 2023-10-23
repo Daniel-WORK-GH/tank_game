@@ -1,4 +1,7 @@
 import pygame
+
+pygame.init()
+
 import consts
 import entityhandler
 from mapobjects.player import Player
@@ -8,6 +11,8 @@ from network.client import Client
 from network import converter
 from mapobjects.map import Map
 from mapobjects.shadow import Shadow
+from menus.button import Button
+from menus.textbox import Textbox
 
 class GameState:
 	connecting = 1
@@ -20,7 +25,6 @@ gamestate = GameState.connecting
 screen = pygame.display.set_mode((600, 400), pygame.SRCALPHA)
 clock = pygame.time.Clock()
 pygame.display.set_caption(consts.PROGRAM_NAME)
-pygame.init()
 
 
 # Client for conencting to game or
@@ -39,11 +43,13 @@ shadow = Shadow(screen, map)
 def game_loop():
 	running = True
 
+	t = Textbox([250, 250], 100)
+
 	while running:
 		# Handle game step
 		clock.tick(consts.FPS_CAP)
 		screen.fill(colors.grass)
-		print(clock.get_fps())
+		#print(clock.get_fps())
 
 		# Get all events since last step
 		events = pygame.event.get()
@@ -62,6 +68,9 @@ def game_loop():
 		# Update the player and get data from server
 		if gamestate == GameState.ingame:
 			in_game_loop(events)
+
+			t.update(events)
+			t.draw(screen)
 
 		pygame.display.flip()
 
