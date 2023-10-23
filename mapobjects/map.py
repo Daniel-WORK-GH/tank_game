@@ -5,7 +5,7 @@ class Map:
     def __init__(self,
             tilewidth=consts.DEFAULT_TILE_SIZE,
             tileheight=consts.DEFAULT_TILE_SIZE):
-        self.map:list[Tile] = []
+        self.map:list[list[Tile]] = []
         self.tilewidth = tilewidth
         self.tileheight = tileheight
         self.width = 0
@@ -36,7 +36,8 @@ class Map:
 
 
     def draw(self, surface):
-        for tile in self.map:
-            tile.draw(surface)
+        for row in self.map:
+            for tile in row:
+                tile.draw(surface)
 
     

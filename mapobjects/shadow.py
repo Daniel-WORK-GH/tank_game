@@ -35,10 +35,11 @@ class Shadow:
 
         while True:
             tilex, tiley = x, y
+            
             if tilex < 0 or tiley < 0: break
             if tilex >= self.map.width or tiley >= self.map.height: break
             
-            
+            tile = self.map.map[tilex][tiley]
             
             x, y = x + STEP * dx, y + STEP * dy
 
@@ -47,14 +48,15 @@ class Shadow:
         points:list[Vector2] = []
         count:list[int] = []
         
-        for tile in self.tiles:
-            for corner in self.get_corners(tile):
-                if tile.id != Tile.nothing_id:
-                    if corner in points:
-                        count[points.index(corner)] += 1
-                    else:
-                        points.append(corner)
-                        count.append(1)
+        for row in self.map.map:
+            for tile in row:
+                for corner in self.get_corners(tile):
+                    if tile.id != Tile.nothing_id:
+                        if corner in points:
+                            count[points.index(corner)] += 1
+                        else:
+                            points.append(corner)
+                            count.append(1)
 
         w, h = self.surface.get_size()
         points.append((0, 0))
@@ -89,15 +91,6 @@ class Shadow:
             temp = (vector[0], linehelper.extend_point(center, vector[1], BIGNUM))
             minintersection = temp[1]
             mindistance = (minintersection[0] - center[0]) ** 2 + (minintersection[1] - center[1]) ** 2
-            for tile in self.tiles:
-                if tile.id != Tile.nothing_id: 
-                    for edge in self.get_edges(tile):
-                        intersection = linehelper.line_line_intersect(temp[0], temp[1], edge[0], edge[1])
-                        if intersection:
-                            distance = (intersection[0] - center[0]) ** 2 + (intersection[1] - center[1]) ** 2
-                            if distance < mindistance: 
-                                mindistance = distance
-                                minintersection = intersection
 
             if minintersection != None:
                 shadowpoly.append(minintersection)
