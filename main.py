@@ -71,7 +71,7 @@ def connection_loop(events):
 
 	name = input("Enter name: ")
 	ishosting = input("Hosting ? (y/n): ") == 'y'
-
+	
 	entityhandler.thisPlayer.name = name
 
 	if ishosting:

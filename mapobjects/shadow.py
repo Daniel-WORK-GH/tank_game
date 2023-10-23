@@ -141,26 +141,14 @@ class Shadow:
         self.surface.fill(consts.colors.transparent_dark_gray)
         draw.polygon(self.surface, consts.colors.black_rgba,
             [(round(p[0]), round(p[1])) for p in shadow])
-        #shadowmask = mask.from_threshold(self.surface, consts.colors.white, (1, 1, 1))
 
         if not consts.DEBUG_MAP:    
             sur = Surface(surface.get_size(), SRCALPHA)
             sur.fill((*consts.colors.grass, 255))
             sur.blit(self.surface, (0, 0), None, BLEND_RGBA_SUB)
-            #surface.fill(consts.colors.white)
             surface.blit(sur, (0, 0))
-            #draw.polygon(surface, consts.colors.smitranparent_gray, shadowmask.outline())
 
         if consts.DEBUG_MAP:
-            #draw.polygon(surface, consts.colors.smitranparent_gray,
-            #    [(round(p[0]), round(p[1])) for p in shadow])
-
-            #for s in shadowmask.outline():
-            #    draw.circle(surface, consts.colors.red, s, 4)
-            
-            #surface.blit(self.surface, (0, 0))
-            #surface.blit(shadowmask.to_surface(), (0, 0))
-
             for line in self.project_vectors(center):
                 draw.line(surface, consts.colors.blue, *line)
             
