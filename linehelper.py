@@ -4,6 +4,8 @@ coordinate = tuple[float, float]
 
 line = tuple[coordinate, coordinate]
 
+rect = tuple[float, float, float, float]
+
 def line_line_intersect(P0:coordinate, P1:coordinate, Q0:coordinate, Q1:coordinate) -> bool:
     d = (P1[0]-P0[0]) * (Q1[1]-Q0[1]) + (P1[1]-P0[1]) * (Q0[0]-Q1[0]) 
     if d == 0:
@@ -27,6 +29,15 @@ def normalize_line(start:coordinate, end:coordinate) -> coordinate:
     direction = ((end[0] - start[0]), (end[1] - start[1]))
     len = line_length(start, end)
     return (direction[0] / len, direction[1] / len)
+
+
+def line_bounding_rect(start:coordinate, end:coordinate) -> rect:
+    x = min(start[0], end[0])
+    y = min(start[1], end[1])
+    w = abs(end[0] - start[0])
+    h = abs(end[1] - start[1])
+
+    return [x, y, w, h]
 
 
 def extend_point(center:coordinate, point:coordinate, newlen:coordinate) -> line:
