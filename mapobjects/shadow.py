@@ -25,6 +25,12 @@ class Shadow:
         yield (tile.bounds.bottomleft, tile.bounds.topleft)
 
 
+    def enumarate_tile_row(self, start:tuple[float, float], end:tuple[float, float]):
+        x, y = start
+
+        direction = 
+
+
     def create_map_points(self) -> list[Vector2]:
         points:list[Vector2] = []
         count:list[int] = []
