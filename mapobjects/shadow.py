@@ -26,9 +26,15 @@ class Shadow:
 
 
     def enumarate_tile_row(self, start:tuple[float, float], end:tuple[float, float]):
-        x, y = start
+        dx, dy = linehelper.normalize_line(start, end)
 
-        direction = 
+        #x, y = round(start[0]), round(start[1])
+
+        #while True
+
+        
+        
+        
 
 
     def create_map_points(self) -> list[Vector2]:
