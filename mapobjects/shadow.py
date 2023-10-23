@@ -6,8 +6,8 @@ from mapobjects.tile import Tile
 from mapobjects.map import Map
 
 class Shadow:
-    def __init__(self, surface:Surface, tiles:Map):
-        self.tiles = tiles
+    def __init__(self, surface:Surface, map:Map):
+        self.map = map
         self.surface = Surface(surface.get_size(), SRCALPHA)
         self.mappoints = self.create_map_points()
  
@@ -35,9 +35,11 @@ class Shadow:
 
         while True:
             tilex, tiley = x, y
-
-            self
-
+            if tilex < 0 or tiley < 0: break
+            if tilex >= self.map.width or tiley >= self.map.height: break
+            
+            
+            
             x, y = x + STEP * dx, y + STEP * dy
 
     
