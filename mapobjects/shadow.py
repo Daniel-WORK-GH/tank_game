@@ -38,7 +38,7 @@ class Shadow:
 
     def enumarate_tile_row(self, start:tuple[float, float], end:tuple[float, float]):
         STEP = 0.8
-        MAXITR = 20
+        MAXITR = 40
         
         dx, dy = linehelper.normalize_line(start, end)
 
