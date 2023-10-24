@@ -12,23 +12,29 @@ class Button:
             self.position = Vector2(0, 0)
 
         if size:
-            self.bounds = Rect(position, size)
+            self.bounds = Rect(
+                self.position[0] - size[0] / 2,
+                self.position[1] - size[1] / 2,
+                *size)
 
         if not self.bounds:
-            self.create_bounds_from_text(text)
+            self.create_bounds_from_text()
 
         self.prevclick = False
-        self.currclick = False
+        self.currclick = True
 
         self.rendered =consts.FONT.render(self.text, False, consts.colors.red)
 
 
     def create_bounds_from_text(self):
         w, h = consts.FONT.size(self.text)     
-        self.bounds = Rect(self.position[0], self.position[1], w, h)
+        self.bounds = Rect(
+            self.position[0] - w / 2,
+            self.position[1] - h / 2,
+            w, h)
 
 
-    def update(self):
+    def update(self, events):
         self.prevclick = self.currclick
 
         x, y = mouse.get_pos()
@@ -48,4 +54,4 @@ class Button:
     def draw(self, surface:Surface):
         if consts.DEBUG_MENU:
             draw.rect(surface, consts.colors.blue, self.bounds)
-        surface.blit(self.rendered, self.position)
+        surface.blit(self.rendered, self.bounds.topleft)

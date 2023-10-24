@@ -1,6 +1,7 @@
 import pygame
 
 PROGRAM_NAME = "Game"
+SCREEN_SIZE = (600, 400)
 FONT = pygame.font.SysFont('timesnewroman',  36)
 FPS_CAP = 60
 

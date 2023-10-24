@@ -13,16 +13,21 @@ from mapobjects.map import Map
 from mapobjects.shadow import Shadow
 from menus.button import Button
 from menus.textbox import Textbox
+from menus.button import Button
+from menus.menu import Menu
+from menus.textbox import Textbox
 
 class GameState:
 	connecting = 1
-	ingame = 2
+	client_setup = 2
+	server_setup = 3
+	ingame = 4
 
 gamestate = GameState.connecting
 
 
 # Setup game window
-screen = pygame.display.set_mode((600, 400), pygame.SRCALPHA)
+screen = pygame.display.set_mode(consts.SCREEN_SIZE, pygame.SRCALPHA)
 clock = pygame.time.Clock()
 pygame.display.set_caption(consts.PROGRAM_NAME)
 
@@ -40,10 +45,79 @@ map.load("maps/map1.txt")
 shadow = Shadow(screen, map)
 
 
+# Menus
+def set_game_state(newstate:GameState):
+	global gamestate
+	gamestate = newstate
+
+sw, sh = consts.SCREEN_SIZE
+centerwidth = sw / 2
+
+connetion_menu = Menu([
+	Button("Connect to server",
+		lambda:set_game_state(GameState.client_setup),
+		[centerwidth, 200]),
+
+	Button("Host server",
+		lambda:set_game_state(GameState.server_setup),
+		[centerwidth, 248])
+])
+
+
+def host_server(name):
+	global client, server
+
+	entityhandler.thisPlayer.name = name
+	
+	addr = get_current_ip()
+	port = consts.SERVER_PORT
+
+	server = ThreadServer("", port)
+	client = Client()
+	client.connect("localhost", port)
+
+	server.start()
+	
+	set_game_state(GameState.ingame)
+
+
+def connect_to_server(name, ip):
+	global client, server
+
+	entityhandler.thisPlayer.name = name
+
+	port = consts.SERVER_PORT
+
+	client = Client()
+	client.connect(ip, port)
+
+	set_game_state(GameState.ingame)
+	
+
+csname = Textbox("Name:", [centerwidth, 200], 100)
+csip = Textbox("Ip:", [centerwidth, 248], 100)
+
+client_setup_menu = Menu([
+	csname,
+	csip,
+	Button("Connect",
+		lambda:connect_to_server(csname.text, csip.text),
+		[centerwidth, 296])
+])
+
+
+ssname = Textbox("Name:", [centerwidth, 200], 100)
+
+server_setup_menu = Menu([
+	csname,
+	Button("Connect",
+		lambda:host_server(csname.text),
+		[centerwidth, 248])
+])
+
+
 def game_loop():
 	running = True
-
-	t = Textbox([250, 250], 100)
 
 	while running:
 		# Handle game step
@@ -59,47 +133,27 @@ def game_loop():
 			if event.type == pygame.QUIT:
 				running = False
 
-		# Update connection loop
-		# Set up hosting / login to other server
+		# Update main menu
 		if gamestate == GameState.connecting:
-			connection_loop(events)
+			connetion_menu.update(events)
+			connetion_menu.draw(screen)
+
+		# Set up hosting
+		if gamestate == GameState.server_setup:
+			server_setup_menu.update(events)
+			server_setup_menu.draw(screen)
+
+		# Set up client
+		if gamestate == GameState.client_setup:
+			client_setup_menu.update(events)
+			client_setup_menu.draw(screen)
 
 		# Update in game loop
 		# Update the player and get data from server
 		if gamestate == GameState.ingame:
 			in_game_loop(events)
-
-			t.update(events)
-			t.draw(screen)
-
+			
 		pygame.display.flip()
-
-
-def connection_loop(events):
-	global ishosting, server, client, gamestate
-
-	name = input("Enter name: ")
-	ishosting = input("Hosting ? (y/n): ") == 'y'
-	
-	entityhandler.thisPlayer.name = name
-
-	if ishosting:
-		addr = get_current_ip()
-		port = consts.SERVER_PORT
-
-		server = ThreadServer("", port)
-		client = Client()
-		client.connect("localhost", port)
-
-		server.start()
-	else:
-		addr = input("Enter server ip: ")
-		port = consts.SERVER_PORT
-
-		client = Client()
-		client.connect(addr, port)
-
-	gamestate = GameState.ingame
 
 
 def in_game_loop(events):
