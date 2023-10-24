@@ -1,6 +1,7 @@
 from pygame import *
 import consts
 from consts import colors
+from mapobjects import transform
 
 
 class Tile:
@@ -42,9 +43,14 @@ class Tile:
                 self.color)
 
     
-    def draw(self, surface):
+    def draw(self, surface, trans:transform.Transform):
         if self.id == Tile.wall_id:
-            draw.rect(surface, self.color, self.bounds)
+            if trans:
+                newpos = transform.transformPoint(self.position, trans.position, 0)
+                newbounds = Rect(*newpos, *self.bounds.size)
+                draw.rect(surface, self.color, newbounds)
+            else:
+                draw.rect(surface, self.color, self.bounds)
 
 
 tile_ids = {

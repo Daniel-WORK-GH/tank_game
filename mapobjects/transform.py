@@ -2,6 +2,11 @@ from pygame import Vector2
 import math
 
 
+class Transform:
+    def __init__(self, position):
+        self.position = position
+
+
 def findPolygonCenter(points:list[Vector2]) -> Vector2:
     avgx, avgy = 0, 0
     count = len(points)

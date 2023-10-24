@@ -40,9 +40,9 @@ class Map:
                 y, x = y + 1, 0
 
 
-    def draw(self, surface):
+    def draw(self, surface, transform:transform.Transform):
         for row in self.map:
             for tile in row:
-                tile.draw(surface)
+                tile.draw(surface, transform)
 
     

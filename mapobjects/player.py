@@ -139,10 +139,20 @@ class Player:
                 self.elapsedcooldown = 0
 
 
-    def draw(self, surface:Surface):
-        bodypoints = transform.transformPolygon(self.bodypoints, self.position, self.bodyangle)  
-        headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
-        cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
+    def draw(self, surface:Surface, trans:transform.Transform):
+        bodypoints=None
+        headpoints=None
+        cannonpoints=None
+        
+        if trans:
+            vec = Vector2(*trans.position)
+            bodypoints = transform.transformPolygon(self.bodypoints, self.position + vec, self.bodyangle)  
+            headpoints = transform.transformPolygon(self.headpoints, self.position + vec, self.headangle)
+            cannonpoints = transform.transformPolygon(self.cannonpoints, self.position + vec, self.headangle)
+        else:
+            bodypoints = transform.transformPolygon(self.bodypoints, self.position, self.bodyangle)  
+            headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
+            cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
         if self.shot:
             self.shot.draw(surface)
@@ -174,6 +184,6 @@ class Rocket:
                         break
 
 
-    def draw(self, surface:Surface):
+    def draw(self, surface:Surface, transform:transform.Transform):
         endpos = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
         draw.line(surface, colors.rocket, self.start, endpos, 3)

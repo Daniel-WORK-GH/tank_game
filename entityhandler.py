@@ -1,5 +1,6 @@
 import json
 from mapobjects.player import Player
+from mapobjects.transform import Transform
 from network.client import Client
 from network import converter
    
@@ -30,7 +31,7 @@ def update(clock, events):
     thisPlayer.update(clock, events)
 
 
-def draw(surface):
+def draw(surface, transfrom:Transform):
     for name, player in idableEntities.items():
-        player.draw(surface)
+        player.draw(surface, transfrom)
     

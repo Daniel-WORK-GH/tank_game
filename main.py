@@ -11,6 +11,7 @@ from network.client import Client
 from network import converter
 from mapobjects.map import Map
 from mapobjects.shadow import Shadow
+from mapobjects.transform import Transform
 from menus.button import Button
 from menus.textbox import Textbox
 from menus.button import Button
@@ -28,6 +29,7 @@ gamestate = GameState.connecting
 
 # Setup game window
 screen = pygame.display.set_mode(consts.SCREEN_SIZE, pygame.SRCALPHA)
+screensurface = pygame.Surface(consts.SCREEN_SIZE, pygame.SRCALPHA)
 clock = pygame.time.Clock()
 pygame.display.set_caption(consts.PROGRAM_NAME)
 
@@ -42,7 +44,7 @@ client:Client = None
 # Ingame objects
 map = Map()
 map.load("maps/map1.txt")
-shadow = Shadow(screen, map)
+shadow = Shadow(screensurface, map)
 
 Player.set_available_spawns(map.availablespawns)
 
@@ -123,7 +125,7 @@ def game_loop():
 	while running:
 		# Handle game step
 		clock.tick(consts.FPS_CAP)
-		screen.fill(colors.grass)
+		screensurface.fill(colors.grass)
 		print(clock.get_fps())
 
 		# Get all events since last step
@@ -137,23 +139,24 @@ def game_loop():
 		# Update main menu
 		if gamestate == GameState.connecting:
 			connetion_menu.update(events)
-			connetion_menu.draw(screen)
+			connetion_menu.draw(screensurface)
 
 		# Set up hosting
 		if gamestate == GameState.server_setup:
 			server_setup_menu.update(events)
-			server_setup_menu.draw(screen)
+			server_setup_menu.draw(screensurface)
 
 		# Set up client
 		if gamestate == GameState.client_setup:
 			client_setup_menu.update(events)
-			client_setup_menu.draw(screen)
+			client_setup_menu.draw(screensurface)
 
 		# Update in game loop
 		# Update the player and get data from server
 		if gamestate == GameState.ingame:
 			in_game_loop(events)
 			
+		screen.blit(screensurface, (0, 0))
 		pygame.display.flip()
 
 
@@ -162,13 +165,15 @@ def in_game_loop(events):
 	entityhandler.update(clock, events)
 
 	# Draw players
-	entityhandler.draw(screen)
+	entityhandler.draw(screensurface, Transform(-entityhandler.thisPlayer.position +
+						pygame.Vector2(consts.SCREEN_SIZE[0] / 2, consts.SCREEN_SIZE[1] / 2)))
 
 	# Draw vision
-	shadow.draw(screen, entityhandler.thisPlayer.position)
+	shadow.draw(screensurface, entityhandler.thisPlayer.position)
 
 	# Draw map
-	map.draw(screen)
+	map.draw(screensurface, Transform(-entityhandler.thisPlayer.position +
+						pygame.Vector2(consts.SCREEN_SIZE[0] / 2, consts.SCREEN_SIZE[1] / 2)))
 
 	# Send and get data from server
 	player = entityhandler.thisPlayer
