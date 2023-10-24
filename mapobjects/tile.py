@@ -6,6 +6,7 @@ from consts import colors
 class Tile:
     nothing_id = 0
     wall_id = 1
+    spawn_id = 2
 
     def __init__(self, id, x=0, y=0,
             width=consts.DEFAULT_TILE_SIZE,
@@ -15,7 +16,6 @@ class Tile:
         self.color = color
         self.position = Vector2(x, y)
         self.bounds = Rect(round(x), round(y), width, height)
-        self.velocity = Vector2(0, 0)
 
 
     def set_data(self, x, y, width, height):
@@ -43,13 +43,14 @@ class Tile:
 
     
     def draw(self, surface):
-        if self.id != Tile.nothing_id:
+        if self.id == Tile.wall_id:
             draw.rect(surface, self.color, self.bounds)
 
 
 tile_ids = {
     Tile.nothing_id : Tile(Tile.nothing_id),
-    Tile.wall_id : Tile(Tile.wall_id, color=consts.colors.black)
+    Tile.wall_id : Tile(Tile.wall_id, color=consts.colors.black),
+    Tile.spawn_id : Tile(Tile.spawn_id, color=consts.colors.grass_light)
 }
 
 

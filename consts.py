@@ -41,6 +41,7 @@ class colors:
     rocket = (255,206,0)
 
     grass = (86, 125, 70)
+    grass_light = (0, 65, 0)
 
     transparent_dark_gray = (100, 100, 100, 0)
     black_rgba = (0, 0, 0, 255)

@@ -10,7 +10,7 @@ from mapobjects import transform
 
 class Player:
     spawns:list[tuple[int, int]] = [(0, 0)]
-
+    
     @staticmethod
     def set_available_spawns(spawns:list[tuple[int, int]]):
         random.seed(Time.time())
@@ -144,10 +144,8 @@ class Player:
         headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
         cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
-
         if self.shot:
             self.shot.draw(surface)
-
 
         draw.polygon(surface, colors.tank_body, bodypoints)
         draw.polygon(surface, colors.tank_head, headpoints)

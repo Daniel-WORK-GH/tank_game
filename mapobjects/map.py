@@ -10,6 +10,7 @@ class Map:
         self.tileheight = tileheight
         self.width = 0
         self.height = 0
+        self.availablespawns = []
 
 
     def load(self, mapname):      
@@ -26,6 +27,10 @@ class Map:
                     tile = create_tile(id,
                         x * self.tilewidth, y * self.tileheight,
                         self.tilewidth, self.tileheight)
+                    
+                    if id == Tile.spawn_id:
+                        self.availablespawns.append(tile.bounds.center)
+
                     row.append(tile)
                     self.width = x
                     x = x + 1

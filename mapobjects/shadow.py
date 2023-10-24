@@ -76,8 +76,8 @@ class Shadow:
         
         for row in self.map.map:
             for tile in row:
-                for corner in self.get_corners(tile):
-                    if tile.id != Tile.nothing_id:
+                if tile.id == Tile.wall_id:
+                    for corner in self.get_corners(tile):
                         if corner in points:
                             count[points.index(corner)] += 1
                         else:
@@ -126,7 +126,7 @@ class Shadow:
             mindistance = (minintersection[0] - center[0]) ** 2 + (minintersection[1] - center[1]) ** 2
 
             for tile in self.enumarate_tile_row(vector[0], vector[1]):
-                if tile and tile.id != Tile.nothing_id:
+                if tile and tile.id == Tile.wall_id:
                     foundintersection = False
 
                     for edge in self.get_edges(tile):

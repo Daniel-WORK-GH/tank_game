@@ -44,6 +44,7 @@ map = Map()
 map.load("maps/map1.txt")
 shadow = Shadow(screen, map)
 
+Player.set_available_spawns(map.availablespawns)
 
 # Menus
 def set_game_state(newstate:GameState):
