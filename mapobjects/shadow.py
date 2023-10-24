@@ -151,7 +151,7 @@ class Shadow:
         shadow = self.create_shadow(center)
 
         if transfrom:
-            for i in range(0, len(shadow) - 1):
+            for i in range(0, len(shadow)):
                 shadow[i] = Transform.transformPoint(shadow[i], transfrom.position, 0)
 
         self.surface.fill(consts.colors.transparent_dark_gray)
