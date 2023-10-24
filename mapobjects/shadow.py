@@ -1,9 +1,11 @@
 import consts
 import math as Math
 import linehelper
+import mapobjects.transform as Transform
 from pygame import *
 from mapobjects.tile import Tile
 from mapobjects.map import Map
+
 
 class Shadow:
     def __init__(self, surface:Surface, map:Map):
@@ -58,7 +60,7 @@ class Shadow:
             t3 = self.get_tile_at(rx, ry + rh)
             t4 = self.get_tile_at(rx + rw, ry + rh)
             
-            if not t1 and not t2 and not t3 and not t4:
+            if (not t1) and (not t2) and (not t3) and (not t4):
                 return
 
             yield t1
@@ -85,11 +87,6 @@ class Shadow:
                             count.append(1)
 
         w, h = self.surface.get_size()
-        points.append((0, 0))
-        points.append((w, 0))
-        points.append((w, h))
-        points.append((0, h))
-        count.extend((1, 1, 1, 1))
 
         return [points[i] for i in range(0, len(points)) if count[i] != 4 and count[i] != 2]
 
@@ -150,8 +147,12 @@ class Shadow:
         return shadowpoly
 
 
-    def draw(self, surface:Surface, center:Vector2):
+    def draw(self, surface:Surface, center:Vector2, transfrom:Transform.Transform):
         shadow = self.create_shadow(center)
+
+        if transfrom:
+            for i in range(0, len(shadow) - 1):
+                shadow[i] = Transform.transformPoint(shadow[i], transfrom.position, 0)
 
         self.surface.fill(consts.colors.transparent_dark_gray)
         draw.polygon(self.surface, consts.colors.black_rgba,

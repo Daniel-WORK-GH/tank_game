@@ -164,16 +164,17 @@ def in_game_loop(events):
 	# Update players
 	entityhandler.update(clock, events)
 
+	transform = Transform(-entityhandler.thisPlayer.position +
+			pygame.Vector2(consts.SCREEN_SIZE[0] / 2, consts.SCREEN_SIZE[1] / 2))
+
 	# Draw players
-	entityhandler.draw(screensurface, Transform(-entityhandler.thisPlayer.position +
-						pygame.Vector2(consts.SCREEN_SIZE[0] / 2, consts.SCREEN_SIZE[1] / 2)))
+	entityhandler.draw(screensurface, transform)
 
 	# Draw vision
-	shadow.draw(screensurface, entityhandler.thisPlayer.position)
+	shadow.draw(screensurface, entityhandler.thisPlayer.position, transform)
 
 	# Draw map
-	map.draw(screensurface, Transform(-entityhandler.thisPlayer.position +
-						pygame.Vector2(consts.SCREEN_SIZE[0] / 2, consts.SCREEN_SIZE[1] / 2)))
+	map.draw(screensurface, transform)
 
 	# Send and get data from server
 	player = entityhandler.thisPlayer

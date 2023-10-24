@@ -143,7 +143,7 @@ class Player:
         bodypoints=None
         headpoints=None
         cannonpoints=None
-        
+
         if trans:
             vec = Vector2(*trans.position)
             bodypoints = transform.transformPolygon(self.bodypoints, self.position + vec, self.bodyangle)  
@@ -155,7 +155,7 @@ class Player:
             cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
         if self.shot:
-            self.shot.draw(surface)
+            self.shot.draw(surface, trans)
 
         draw.polygon(surface, colors.tank_body, bodypoints)
         draw.polygon(surface, colors.tank_head, headpoints)
