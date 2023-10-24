@@ -45,6 +45,9 @@ class Server:
         if player != None:
             self.players[player.name] = player
 
+            if player.shot:
+                player.shot.check_collide(self.players)
+
 
     def handle_request(self, data, client_address):
         data = data.decode('utf-8')

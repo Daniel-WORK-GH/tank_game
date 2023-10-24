@@ -1,7 +1,7 @@
 import pygame
 
 PROGRAM_NAME = "Game"
-SCREEN_SIZE = (600, 400)
+SCREEN_SIZE = (1280, 720)
 FONT = pygame.font.SysFont('timesnewroman',  36)
 FPS_CAP = 60
 
@@ -14,7 +14,7 @@ HEAD_ROTATION = 60
 BODY_ROTATION = 50
 PLAYER_COOLDOWN = 4 # sec
 
-DEFAULT_TILE_SIZE = 24
+DEFAULT_TILE_SIZE = 32
 
 BUFFER_SIZE = 1024
 SERVER_DEBUG_MSGS = False

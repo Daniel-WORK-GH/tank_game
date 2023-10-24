@@ -10,6 +10,8 @@ idableEntities[thisPlayer.name] = thisPlayer
 
 
 def update_players(playerJsonList:str):
+    global thisPlayer
+
     players = converter.json_to_players_list(playerJsonList)
 
     idableEntities.clear()
@@ -19,6 +21,9 @@ def update_players(playerJsonList:str):
         # Update all other players on server, 
         # stored in [idableEntities]
         idableEntities[player.name] = player
+
+        if player.name == thisPlayer.name:
+            thisPlayer = player
 
 
 def update(clock, events):

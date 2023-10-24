@@ -38,7 +38,7 @@ class Shadow:
 
     def enumarate_tile_row(self, start:tuple[float, float], end:tuple[float, float]):
         STEP = 0.8
-        MAXITR = 40
+        MAXITR = 60
         
         dx, dy = linehelper.normalize_line(start, end)
 
@@ -53,10 +53,18 @@ class Shadow:
 
             rx, ry, rw, rh = linehelper.line_bounding_rect((x, y), (nx, ny))
 
-            yield self.get_tile_at(rx, ry)
-            yield self.get_tile_at(rx + rw, ry)
-            yield self.get_tile_at(rx, ry + rh)
-            yield self.get_tile_at(rx + rw, ry + rh)
+            t1 = self.get_tile_at(rx, ry)
+            t2 = self.get_tile_at(rx + rw, ry)
+            t3 = self.get_tile_at(rx, ry + rh)
+            t4 = self.get_tile_at(rx + rw, ry + rh)
+            
+            if not t1 and not t2 and not t3 and not t4:
+                return
+
+            yield t1
+            yield t2
+            yield t3
+            yield t4
 
             x, y = nx, ny
             itr += 1
@@ -87,13 +95,21 @@ class Shadow:
 
 
     def project_vectors(self, center:Vector2) -> list[Vector2, Vector2]:
+        BIGNUM = 10_000
+
         vectors:list[tuple[Vector2, Vector2]] = []
         
         for point in self.mappoints:
             offset = point - center
-            vectors.append((center, center + offset.rotate(-0.01)))
+            v1 =  center + offset.rotate(-0.01)
+            v2 = center + offset.rotate(0.01)
+
+            v1 = linehelper.extend_point(center, v1, BIGNUM)
+            v2 = linehelper.extend_point(center, v2, BIGNUM)
+
+            vectors.append((center, v1))
             vectors.append((center, point))
-            vectors.append((center, center + offset.rotate(0.01)))
+            vectors.append((center, v2))
 
         return vectors
 
@@ -106,19 +122,18 @@ class Shadow:
         shadowpoly:list[Vector2] = []
 
         for vector in vectors:
-            temp = (vector[0], linehelper.extend_point(center, vector[1], BIGNUM))
-            minintersection = temp[1]
+            minintersection = vector[1]
             mindistance = (minintersection[0] - center[0]) ** 2 + (minintersection[1] - center[1]) ** 2
 
-            for tile in self.enumarate_tile_row(temp[0], temp[1]):
+            for tile in self.enumarate_tile_row(vector[0], vector[1]):
                 if tile and tile.id != Tile.nothing_id:
                     foundintersection = False
 
                     for edge in self.get_edges(tile):
-                        intersection = linehelper.line_line_intersect(*temp, *edge)
+                        intersection = linehelper.line_line_intersect(*vector, *edge)
                         
                         if intersection:
-                            distance = linehelper.line_length_pow2(temp[0], intersection)
+                            distance = linehelper.line_length_pow2(vector[0], intersection)
 
                             if distance < mindistance:
                                 mindistance = distance

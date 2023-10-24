@@ -2,11 +2,21 @@ from pygame import *
 import consts
 import math
 import linehelper
+import random
+import time as Time
 from consts import colors
 from mapobjects import transform
 
 
 class Player:
+    spawns:list[tuple[int, int]] = [(0, 0)]
+
+    @staticmethod
+    def set_available_spawns(spawns:list[tuple[int, int]]):
+        random.seed(Time.time())
+        Player.spawns = spawns
+
+
     def __init__(self, name = "", x=1, y=1,
             width=consts.DEFAULT_BODY_WIDTH,
             height=consts.DEFAULT_BODY_HEIGHT,
@@ -77,6 +87,11 @@ class Player:
     
     def apply_damage(self):
         self.health = 0
+        
+        # Respawn
+        rnd = random.randint(0, len(Player.spawns) - 1)
+        self.position.x = Player.spawns[rnd][0]
+        self.position.y = Player.spawns[rnd][1]
 
 
     def set_size(self, width, height, headwidth, headheight):
@@ -129,9 +144,9 @@ class Player:
         headpoints = transform.transformPolygon(self.headpoints, self.position, self.headangle)
         cannonpoints = transform.transformPolygon(self.cannonpoints, self.position, self.headangle)
 
-       # lookdir = Vector2(math.cos(math.radians(self.headangle)), -math.sin(math.radians(self.headangle)))
-        #self.shot = Rocket(self.position, lookdir)
-        #self.elapsedcooldown = 0
+
+        if self.shot:
+            self.shot.draw(surface)
 
 
         draw.polygon(surface, colors.tank_body, bodypoints)
@@ -147,18 +162,20 @@ class Rocket:
         self.checkedcollide = False
 
 
-    def check_collide(self, playerlist):
+    def check_collide(self, playerlist:dict[str, Player]):
         if self.checkedcollide: return
         self.checkedcollide = True
 
-        self.direction = 10_000 * self.direction
+        self.direction = linehelper.extend_point((0,0), self.direction, 10_000)
 
-        for player in playerlist:
-            for edge in player.get_current_edges():
-                if linehelper.line_line_intersect(*edge, *self.direction):
-                    player.apply_damage()
-                    break
+        for name, player in playerlist.items():
+            #if name != self.player:
+                for edge in player.get_current_edges():
+                    if linehelper.line_line_intersect(*edge, self.start, self.direction):
+                        player.apply_damage()
+                        break
 
 
     def draw(self, surface:Surface):
-        draw.line(surface, colors.rocket, self.start, self.start + self.direction, 3)
+        endpos = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
+        draw.line(surface, colors.rocket, self.start, endpos, 3)

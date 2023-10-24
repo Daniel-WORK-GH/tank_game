@@ -123,7 +123,7 @@ def game_loop():
 		# Handle game step
 		clock.tick(consts.FPS_CAP)
 		screen.fill(colors.grass)
-		#print(clock.get_fps())
+		print(clock.get_fps())
 
 		# Get all events since last step
 		events = pygame.event.get()

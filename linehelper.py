@@ -41,6 +41,6 @@ def line_bounding_rect(start:coordinate, end:coordinate) -> rect:
 
 
 def extend_point(center:coordinate, point:coordinate, newlen:coordinate) -> line:
-    vec = point - center
+    vec = (point[0] - center[0], point[1] - center[1])
     len = math.sqrt((center[0] - point[0]) ** 2 + (center[1] - point[1]) ** 2)
     return (center[0] + vec[0] / len * newlen, center[1] + vec[1] / len * newlen)
