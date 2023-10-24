@@ -182,4 +182,4 @@ def in_game_loop(events):
 
 game_loop()
 pygame.quit()
-server.stop()
+if server: server.stop()

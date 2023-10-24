@@ -20,7 +20,7 @@ class Textbox:
 
         self.create_bounds_from_text(self.text)
 
-        self.rendered = consts.FONT.render(self.text, False, consts.colors.red)
+        self.rendered = consts.FONT.render(self.text, False, consts.colors.black)
 
 
     def create_bounds_from_text(self, text:str):
@@ -50,7 +50,7 @@ class Textbox:
                 if self.firstclick and not self.prevclick:
                     self.text = ""
                     self.firstclick = False
-                    self.rendered = consts.FONT.render(self.text, False, consts.colors.red)
+                    self.rendered = consts.FONT.render(self.text, False, consts.colors.black)
                     self.create_bounds_from_text(self.text)
                     self.currclick = True
             else: 
@@ -84,7 +84,7 @@ class Textbox:
                         else:
                             self.text = self.text[:-1]
                         
-                        self.rendered = consts.FONT.render(self.text, False, consts.colors.red)
+                        self.rendered = consts.FONT.render(self.text, False, consts.colors.black)
                         self.create_bounds_from_text(self.text)
                         
         except Exception as e:

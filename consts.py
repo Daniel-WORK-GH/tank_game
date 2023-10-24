@@ -14,7 +14,6 @@ HEAD_ROTATION = 60
 BODY_ROTATION = 50
 PLAYER_COOLDOWN = 4 # sec
 
-
 DEFAULT_TILE_SIZE = 24
 
 BUFFER_SIZE = 1024
@@ -27,7 +26,7 @@ ROCKET_LIFE_TIME = 0.3 # sec
 
 DEBUG_MAP = False
 
-DEBUG_MENU = True
+DEBUG_MENU = False
 
 class colors:
     white = (255, 255, 255)

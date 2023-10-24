@@ -23,7 +23,7 @@ class Button:
         self.prevclick = False
         self.currclick = True
 
-        self.rendered =consts.FONT.render(self.text, False, consts.colors.red)
+        self.rendered =consts.FONT.render(self.text, False, consts.colors.black)
 
 
     def create_bounds_from_text(self):
