@@ -46,6 +46,8 @@ map = Map()
 map.load("maps/map1.txt")
 shadow = Shadow(screensurface, map)
 
+consts.set_world_map(map)
+
 Player.set_available_spawns(map.availablespawns)
 
 # Menus

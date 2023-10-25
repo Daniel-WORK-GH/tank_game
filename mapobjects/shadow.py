@@ -5,6 +5,7 @@ import mapobjects.transform as Transform
 from pygame import *
 from mapobjects.tile import Tile
 from mapobjects.map import Map
+from mapobjects.tilehelper import *
 
 
 class Shadow:
@@ -12,83 +13,6 @@ class Shadow:
         self.map = map
         self.surface = Surface(surface.get_size(), SRCALPHA)
         self.corners = self.create_map_points()
- 
-
-    def get_tile_corners(self, tile:Tile):
-        yield tile.bounds.topleft
-        yield tile.bounds.topright
-        yield tile.bounds.bottomright
-        yield tile.bounds.bottomleft
-
-
-    def get_edges(self, tile:Tile):
-        yield (tile.bounds.topleft, tile.bounds.topright)
-        yield (tile.bounds.topright, tile.bounds.bottomright)
-        yield (tile.bounds.bottomright, tile.bounds.bottomleft)
-        yield (tile.bounds.bottomleft, tile.bounds.topleft)
-
-
-    def get_tile_at(self, x:float, y:float):
-        x = Math.floor(x / consts.DEFAULT_TILE_SIZE)
-        y = Math.floor(y / consts.DEFAULT_TILE_SIZE)
-
-        if x < 0 or y < 0: return
-        if x >= self.map.width or y >= self.map.height: return
-
-        return self.map.map[y][x]
-    
-
-    def enumarate_tile_row(self, start:tuple[float, float], end:tuple[float, float]):
-        STEP = 0.8
-        MAXITR = 60
-        
-        dx, dy = linehelper.normalize_line(start, end)
-
-        dx *= consts.DEFAULT_TILE_SIZE
-        dy *= consts.DEFAULT_TILE_SIZE
-
-        x, y = start
-
-        checked = []
-        maxdistance = linehelper.line_length_pow2(start, end)
-
-        itr = 0
-        while itr < MAXITR:
-            nx, ny = x + STEP * dx, y + STEP * dy 
-
-            rx, ry, rw, rh = linehelper.line_bounding_rect((x, y), (nx, ny))
-
-            t1 = self.get_tile_at(rx, ry)
-            t2 = self.get_tile_at(rx + rw, ry)
-            t3 = self.get_tile_at(rx, ry + rh)
-            t4 = self.get_tile_at(rx + rw, ry + rh)
-            
-            if (not t1) and (not t2) and (not t3) and (not t4):
-                return
-            
-            if linehelper.line_length_pow2(start, (x, y)) > maxdistance:
-                return
-
-            if t1 not in checked:
-                yield t1
-                checked.append(t1)
-
-            if t2 not in checked:
-                yield t2
-                checked.append(t2)
-
-            if t3 not in checked:
-                yield t3
-                checked.append(t3)
-
-            if t4 not in checked:
-                yield t4
-                checked.append(t4)
-
-            x, y = nx, ny
-
-            itr += 1
-
     
     def create_map_points(self) -> list[tuple[Vector2, int]]: # points, num of tile near it
         points:list[Vector2] = []
@@ -97,7 +21,7 @@ class Shadow:
         for row in self.map.map:
             for tile in row:
                 if tile.id == Tile.wall_id:
-                    for corner in self.get_tile_corners(tile):
+                    for corner in get_tile_corners(tile):
                         if corner in points:
                             count[points.index(corner)] += 1
                         else:
@@ -164,11 +88,11 @@ class Shadow:
             minintersection = vector[1]
             mindistance = (minintersection[0] - center[0]) ** 2 + (minintersection[1] - center[1]) ** 2
 
-            for tile in self.enumarate_tile_row(vector[0], vector[1]):
+            for tile in enumarate_tile_row(self.map, vector[0], vector[1]):
                 if tile and tile.id == Tile.wall_id:
                     foundintersection = False
 
-                    for edge in self.get_edges(tile):
+                    for edge in get_edges(tile):
                         intersection = linehelper.line_line_intersect(vector[0], vector[1], edge[0], edge[1])
                         
                         if intersection:

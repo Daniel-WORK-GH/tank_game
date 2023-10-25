@@ -51,3 +51,13 @@ class colors:
 
     transparent_dark_gray = (100, 100, 100, 0)
     black_rgba = (0, 0, 0, 255)
+
+
+
+from mapobjects.map import Map
+
+WORLD_MAP:Map = None
+
+def set_world_map(map:Map):
+    global WORLD_MAP
+    WORLD_MAP = map

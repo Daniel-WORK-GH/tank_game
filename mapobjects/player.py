@@ -7,7 +7,8 @@ import time as Time
 import entityhandler
 from consts import colors
 from mapobjects import transform
-
+from mapobjects.tile import Tile
+from mapobjects import tilehelper
 
 
 class Player:
@@ -174,12 +175,29 @@ class Rocket:
         self.checkedcollide = False
 
 
+    def check_collide_tile(self):
+        for tile in tilehelper.enumarate_tile_row(consts.WORLD_MAP, self.start, self.end):
+            if tile and tile.id == Tile.wall_id:
+                foundintersection = False
+
+                for edge in tilehelper.get_edges(tile):
+                    intersection = linehelper.line_line_intersect(self.start, self.end, edge[0], edge[1])
+                    
+                    if intersection:
+                        self.end = intersection
+
+                if foundintersection:
+                    break
+
+
     def check_collide_client(self, playerlist:dict[str, Player]):
         if self.checkedcollide: return
         self.checkedcollide = True
 
         self.direction = linehelper.extend_point((0,0), self.direction, 10_000)
         self.end = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
+
+        self.check_collide_tile()
 
         for name, player in playerlist.items():
             if name != self.player:
@@ -196,6 +214,8 @@ class Rocket:
 
         self.direction = linehelper.extend_point((0,0), self.direction, 10_000)
         self.end = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
+
+        self.check_collide_tile()
 
         for name, player in playerlist.items():
             if name != self.player:
