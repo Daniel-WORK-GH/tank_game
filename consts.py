@@ -25,7 +25,7 @@ CLIENT_PORT = 20_001
 
 ROCKET_LIFE_TIME = 0.3 # sec
 
-DEBUG_MAP = True
+DEBUG_MAP = False
 
 DEBUG_MENU = False
 
