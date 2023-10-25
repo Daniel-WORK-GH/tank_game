@@ -174,7 +174,7 @@ def in_game_loop(events):
 	shadow.draw(screensurface, entityhandler.thisPlayer.position, transform)
 
 	# Draw map
-	map.draw(screensurface, transform)
+	map.draw(screensurface, entityhandler.thisPlayer.position, transform)
 
 	# Send and get data from server
 	player = entityhandler.thisPlayer

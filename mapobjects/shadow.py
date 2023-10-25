@@ -49,6 +49,8 @@ class Shadow:
 
         x, y = start
 
+        checked = []
+
         itr = 0
         while itr < MAXITR:
             nx, ny = x + STEP * dx, y + STEP * dy 
@@ -63,12 +65,24 @@ class Shadow:
             if (not t1) and (not t2) and (not t3) and (not t4):
                 return
 
-            yield t1
-            yield t2
-            yield t3
-            yield t4
+            if t1 not in checked:
+                yield t1
+                checked.append(t1)
+
+            if t2 not in checked:
+                yield t2
+                checked.append(t2)
+
+            if t3 not in checked:
+                yield t3
+                checked.append(t3)
+
+            if t4 not in checked:
+                yield t4
+                checked.append(t4)
 
             x, y = nx, ny
+
             itr += 1
 
     
@@ -94,15 +108,31 @@ class Shadow:
     def project_vectors(self, center:Vector2) -> list[Vector2, Vector2]:
         BIGNUM = 10_000
 
+        linelen = linehelper.line_length((0, 0), (
+            consts.VIEW_RANGE[0] * consts.DEFAULT_TILE_SIZE,
+            consts.VIEW_RANGE[1] * consts.DEFAULT_TILE_SIZE
+        ))
+
         vectors:list[tuple[Vector2, Vector2]] = []
         
+        distance = linehelper.line_length_pow2((0, 0), (
+            consts.VIEW_RANGE[0] * consts.DEFAULT_TILE_SIZE,
+            consts.VIEW_RANGE[1] * consts.DEFAULT_TILE_SIZE
+        ))
+
         for point in self.mappoints:
             offset = point - center
+
+            pointdistance = linehelper.line_length_pow2((0, 0), offset)
+
+            if pointdistance > distance:
+                continue
+
             v1 =  center + offset.rotate(-0.01)
             v2 = center + offset.rotate(0.01)
 
-            v1 = linehelper.extend_point(center, v1, BIGNUM)
-            v2 = linehelper.extend_point(center, v2, BIGNUM)
+            v1 = linehelper.extend_point(center, v1, linelen)
+            v2 = linehelper.extend_point(center, v2, linelen)
 
             vectors.append((center, v1))
             vectors.append((center, point))
@@ -112,8 +142,6 @@ class Shadow:
 
 
     def create_shadow(self, center:Vector2) -> list[Vector2]:
-        BIGNUM = 10_000
-
         vectors = self.project_vectors(center)
 
         shadowpoly:list[Vector2] = []
