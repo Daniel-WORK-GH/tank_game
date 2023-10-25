@@ -16,7 +16,6 @@ def update_players(playerJsonList:str):
     players = converter.json_to_players_list(playerJsonList)
 
     idableEntities.clear()
-    idableEntities[thisPlayer.name] = thisPlayer
 
     for player in players:
         # Update all other players on server, 
@@ -25,7 +24,6 @@ def update_players(playerJsonList:str):
 
         if player.name == thisPlayer.name:
             thisPlayer = player
-
 
 def update(clock, events):
     thisPlayer.update(clock, events)

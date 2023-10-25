@@ -17,7 +17,8 @@ def player_to_json(player:Player) -> str:
         shotsource = playershot.player
         start = (playershot.start[0], playershot.start[1])
         direction =(playershot.direction[0], playershot.direction[1])
-        shotdict = {'player':shotsource, 'start':start, 'direction':direction}
+        end = playershot.end
+        shotdict = {'player':shotsource, 'start':start, 'direction':direction, 'end':end}
 
     ret = {
         "name":player.name,
@@ -47,7 +48,7 @@ def set_player_data(player:Player, playerJsonData:str):
     rocket = None
 
     if shot:
-        rocket = Rocket(shot['player'], shot['start'], shot['direction'])            
+        rocket = Rocket(shot['player'], shot['start'], shot['direction'], shot['end'])            
 
     player.set_data(name, position[0], position[1], size[0], size[1], headsize[0], headsize[1], angle, headangle, rocket, elptime)
 

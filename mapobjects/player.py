@@ -4,8 +4,10 @@ import math
 import linehelper
 import random
 import time as Time
+import entityhandler
 from consts import colors
 from mapobjects import transform
+
 
 
 class Player:
@@ -137,6 +139,7 @@ class Player:
                 lookdir = Vector2(math.cos(math.radians(self.headangle)), -math.sin(math.radians(self.headangle)))
                 self.shot = Rocket(self.name, self.position, lookdir)
                 self.elapsedcooldown = 0
+                self.shot.check_collide_client(entityhandler.idableEntities)
 
 
     def draw(self, surface:Surface, trans:transform.Transform):
@@ -163,27 +166,50 @@ class Player:
 
 
 class Rocket:
-    def __init__(self,sourceplayer:str, start:Vector2, direction:Vector2):
+    def __init__(self,sourceplayer:str, start:Vector2, direction:Vector2, end:Vector2=None):
         self.player = sourceplayer
         self.start = start
+        self.end = end
         self.direction = direction
         self.checkedcollide = False
 
 
-    def check_collide(self, playerlist:dict[str, Player]):
+    def check_collide_client(self, playerlist:dict[str, Player]):
         if self.checkedcollide: return
         self.checkedcollide = True
 
         self.direction = linehelper.extend_point((0,0), self.direction, 10_000)
+        self.end = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
 
         for name, player in playerlist.items():
-            #if name != self.player:
+            if name != self.player:
                 for edge in player.get_current_edges():
-                    if linehelper.line_line_intersect(*edge, self.start, self.direction):
-                        player.apply_damage()
+                    intersection = linehelper.line_line_intersect(*edge, self.start, self.end)
+                    if intersection:
+                        self.end = intersection
                         break
 
 
-    def draw(self, surface:Surface, transform:transform.Transform):
-        endpos = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
-        draw.line(surface, colors.rocket, self.start, endpos, 3)
+    def check_collide_server(self, playerlist:dict[str, Player]):
+        if self.checkedcollide: return
+        self.checkedcollide = True
+
+        self.direction = linehelper.extend_point((0,0), self.direction, 10_000)
+        self.end = self.start[0] + self.direction[0], self.start[1] + self.direction[1]
+
+        for name, player in playerlist.items():
+            if name != self.player:
+                for edge in player.get_current_edges():
+                    intersection = linehelper.line_line_intersect(*edge, self.start, self.end)
+                    if intersection:
+                        player.apply_damage()
+                        self.end = intersection
+                        break
+
+
+    def draw(self, surface:Surface, trans:transform.Transform):
+        start = transform.transformPoint(self.start, trans.position, 0)
+
+        endpos = transform.transformPoint(self.end, trans.position, 0)
+
+        draw.line(surface, colors.rocket, start, endpos, 3)

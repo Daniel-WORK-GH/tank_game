@@ -1,6 +1,7 @@
 import socket
 import threading
 import consts
+import linehelper
 from datetime import datetime
 from mapobjects.player import Player, Rocket
 from . import converter
@@ -39,14 +40,25 @@ class Server:
             print(f'[{current_date_time}] {msg}')
 
 
-    def update_on_request(self, data):
+    def update_on_request(self, data): #return player of request
+        DIST = 5
+
         player = converter.json_to_player(data)
+
+        if player.name in self.players.keys():
+            if linehelper.line_length(player.position, self.players[player.name].position) > DIST:
+                # assume was killed
+                player.position = self.players[player.name].position
+
 
         if player != None:
             self.players[player.name] = player
 
             if player.shot:
-                player.shot.check_collide(self.players)
+                p = player.shot.check_collide_server(self.players)
+
+                if p:
+                    print(p.position)
 
 
     def handle_request(self, data, client_address):
@@ -59,8 +71,8 @@ class Server:
         self.printwt(f'[ REQUEST from {client_address} ]: {data}', forceprint)
 
         self.update_on_request(data)
-
         resp = converter.player_list_to_json(self.players.values())
+
         self.printwt(f'[ RESPONSE to {client_address} ]', forceprint)
         self.sock.sendto(resp.encode('utf-8'), client_address)
 
