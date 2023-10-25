@@ -80,6 +80,12 @@ class Textbox:
                             elif key == K_KP_ENTER: pass
                             elif key == K_RETURN: pass
                             elif key == K_TAB: pass
+                            elif key == KMOD_CTRL: pass
+                            elif key == K_ESCAPE: pass
+                            elif event.mod & event.mod & KMOD_CTRL and event.key == K_v:
+                                print(scrap.get(SCRAP_TEXT).decode("utf-8"))
+                                self.text += str(scrap.get(SCRAP_TEXT).decode("utf-8"))
+                                self.text = self.text.replace(chr(0), "")
                             else: self.text += chr(event.key)
                         else:
                             self.text = self.text[:-1]

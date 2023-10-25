@@ -1,5 +1,6 @@
 import pygame
 
+
 pygame.init()
 
 import consts
@@ -33,6 +34,8 @@ screensurface = pygame.Surface(consts.SCREEN_SIZE, pygame.SRCALPHA)
 clock = pygame.time.Clock()
 pygame.display.set_caption(consts.PROGRAM_NAME)
 
+pygame.scrap.init()
+pygame.scrap.set_mode(pygame.SCRAP_CLIPBOARD)
 
 # Client for conencting to game or
 # Server to host game 
@@ -40,10 +43,9 @@ ishosting = False
 server:ThreadServer = None
 client:Client = None
 
-
 # Ingame objects
 map = Map()
-map.load("maps/map1.txt")
+map.load("_internal/maps/map1.txt")
 shadow = Shadow(screensurface, map)
 
 consts.set_world_map(map)
@@ -128,7 +130,7 @@ def game_loop():
 		# Handle game step
 		clock.tick(consts.FPS_CAP)
 		screensurface.fill(colors.grass)
-		print(clock.get_fps())
+		#print(clock.get_fps())
 
 		# Get all events since last step
 		events = pygame.event.get()
