@@ -50,6 +50,7 @@ class Shadow:
         x, y = start
 
         checked = []
+        maxdistance = linehelper.line_length_pow2(start, end)
 
         itr = 0
         while itr < MAXITR:
@@ -63,6 +64,9 @@ class Shadow:
             t4 = self.get_tile_at(rx + rw, ry + rh)
             
             if (not t1) and (not t2) and (not t3) and (not t4):
+                return
+            
+            if linehelper.line_length_pow2(start, (x, y)) > maxdistance:
                 return
 
             if t1 not in checked:
@@ -186,14 +190,18 @@ class Shadow:
         draw.polygon(self.surface, consts.colors.black_rgba,
             [(round(p[0]), round(p[1])) for p in shadow])
 
-        if not consts.DEBUG_MAP:    
-            sur = Surface(surface.get_size(), SRCALPHA)
-            sur.fill((*consts.colors.grass, 255))
-            sur.blit(self.surface, (0, 0), None, BLEND_RGBA_SUB)
-            surface.blit(sur, (0, 0))
+    
+        sur = Surface(surface.get_size(), SRCALPHA)
+        sur.fill((*consts.colors.grass, 255))
+        sur.blit(self.surface, (0, 0), None, BLEND_RGBA_SUB)
+        surface.blit(sur, (0, 0))
 
         if consts.DEBUG_MAP:
             for line in self.project_vectors(center):
+                line = (
+                    Transform.transformPoint(line[0], transfrom.position, 0), 
+                    Transform.transformPoint(line[1], transfrom.position, 0)
+                )
                 draw.line(surface, consts.colors.blue, *line)
             
             for p in self.mappoints:

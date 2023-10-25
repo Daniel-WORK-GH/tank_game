@@ -1,4 +1,5 @@
 import pygame
+import math
 
 PROGRAM_NAME = "Game"
 SCREEN_SIZE = (1280, 720)
@@ -24,11 +25,14 @@ CLIENT_PORT = 20_001
 
 ROCKET_LIFE_TIME = 0.3 # sec
 
-DEBUG_MAP = False
+DEBUG_MAP = True
 
 DEBUG_MENU = False
 
-VIEW_RANGE = (25, 15)
+VIEW_RANGE = (
+    math.ceil(SCREEN_SIZE[0] / DEFAULT_TILE_SIZE / 2),
+    math.ceil(SCREEN_SIZE[1] / DEFAULT_TILE_SIZE / 2)
+)
 
 class colors:
     white = (255, 255, 255)
