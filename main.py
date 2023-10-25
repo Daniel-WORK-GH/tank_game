@@ -45,12 +45,14 @@ client:Client = None
 
 # Ingame objects
 map = Map()
-map.load("_internal/maps/map1.txt")
+map.load("maps/map1.txt")
 shadow = Shadow(screensurface, map)
 
 consts.set_world_map(map)
 
 Player.set_available_spawns(map.availablespawns)
+
+entityhandler.thisPlayer.apply_damage()
 
 # Menus
 def set_game_state(newstate:GameState):
