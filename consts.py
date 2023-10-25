@@ -25,13 +25,13 @@ CLIENT_PORT = 20_001
 
 ROCKET_LIFE_TIME = 0.3 # sec
 
-DEBUG_MAP = False
+DEBUG_MAP = True
 
 DEBUG_MENU = False
 
 VIEW_RANGE = (
-    math.ceil(SCREEN_SIZE[0] / DEFAULT_TILE_SIZE / 2),
-    math.ceil(SCREEN_SIZE[1] / DEFAULT_TILE_SIZE / 2)
+    math.ceil(SCREEN_SIZE[0] / DEFAULT_TILE_SIZE / 2) + 1,
+    math.ceil(SCREEN_SIZE[1] / DEFAULT_TILE_SIZE / 2) + 1
 )
 
 class colors:

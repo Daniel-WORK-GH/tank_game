@@ -13,7 +13,7 @@ class Map:
         self.availablespawns = []
 
 
-    def get_tiles_in_range(self, center:Vector2, viewrange:tuple[int, int]):
+    def get_edges_range(self, center, viewrange) -> tuple[float, float, float, float]:
         vx, vy = viewrange
         x, y = center
 
@@ -49,6 +49,12 @@ class Map:
 
         if startx < 0: startx = 0
         if starty < 0: starty = 0
+
+        return startx, starty, endx, endy
+
+
+    def get_tiles_in_range(self, center:Vector2, viewrange:tuple[int, int]):
+        startx, starty, endx, endy = self.get_edges_range(center, viewrange)
 
         for y in range(starty, endy):
             for x in range(startx, endx):
