@@ -26,6 +26,8 @@ class Client:
         try:
             msg, addrr = self.socket.recvfrom(consts.BUFFER_SIZE)
             return msg.decode('utf-8')
+        except socket.timeout:
+            exit()
         except Exception as e:
             if e.args[0] == 10054:
                 exit()
