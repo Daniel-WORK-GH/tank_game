@@ -32,6 +32,7 @@ class Server:
         self.sock.bind((addr, port))
 
         self.players:dict[str, Player] = {}
+        self.ips:dict[Player, str] = {}
 
 
     def printwt(self, msg, forceprint = False):
@@ -40,10 +41,16 @@ class Server:
             print(f'[{current_date_time}] {msg}')
 
 
-    def update_on_request(self, data): #return player of request
+    def update_on_request(self, data, ip): #return player of request
         DIST = 5
 
         player = converter.json_to_player(data)
+
+        if player not in self.ips.keys():
+            self.ips[player] = ip
+        else:
+            if self.ips[player] != ip:
+                return False
 
         if player.name in self.players.keys():
             if linehelper.line_length(player.position, self.players[player.name].position) > DIST:
@@ -60,6 +67,8 @@ class Server:
                 if p:
                     print(p.position)
 
+        return True
+
 
     def handle_request(self, data, client_address):
         data = data.decode('utf-8')
@@ -70,11 +79,13 @@ class Server:
 
         self.printwt(f'[ REQUEST from {client_address} ]: {data}', forceprint)
 
-        self.update_on_request(data)
+        validplayer = self.update_on_request(data, client_address)
         resp = converter.player_list_to_json(self.players.values())
 
         self.printwt(f'[ RESPONSE to {client_address} ]', forceprint)
-        self.sock.sendto(resp.encode('utf-8'), client_address)
+        
+        if validplayer:
+            self.sock.sendto(resp.encode('utf-8'), client_address)
 
 
     def wait_for_client(self):
