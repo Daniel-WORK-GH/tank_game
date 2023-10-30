@@ -9,6 +9,7 @@ from consts import colors
 from mapobjects import transform
 from mapobjects.tile import Tile
 from mapobjects import tilehelper
+from mapobjects import collisions
 
 
 class Player:
@@ -87,6 +88,14 @@ class Player:
         yield (bodypoints[2], bodypoints[3])
         yield (bodypoints[3], bodypoints[0])
 
+
+    def get_current_corners(self) -> list[Vector2]:
+        bodypoints = transform.transformPolygon(self.bodypoints, self.position, self.bodyangle) 
+        yield bodypoints[0]
+        yield bodypoints[1]
+        yield bodypoints[2]
+        yield bodypoints[3]
+
     
     def apply_damage(self):
         self.health = 0
@@ -142,6 +151,11 @@ class Player:
                 self.elapsedcooldown = 0
                 self.shot.check_collide_client(entityhandler.idableEntities)
 
+        # Handle collisions
+        vec = collisions.collide_player_world(self.position, list(self.get_current_corners()))
+        if vec:
+            self.position += vec
+
 
     def draw(self, surface:Surface, trans:transform.Transform):
         bodypoints=None
@@ -160,6 +174,7 @@ class Player:
 
         if self.shot:
             self.shot.draw(surface, trans)
+
 
         draw.polygon(surface, colors.tank_body, bodypoints)
         draw.polygon(surface, colors.tank_head, headpoints)
