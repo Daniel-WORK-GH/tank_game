@@ -45,7 +45,10 @@ client:Client = None
 
 # Ingame objects
 map = Map()
-map.load("maps/map1.txt")
+try:
+	map.load("maps/map1.txt")
+except:
+	map.load("_internal/maps/map1.txt")
 shadow = Shadow(screensurface, map)
 
 consts.set_world_map(map)
